@@ -18,7 +18,7 @@ public class PG1Application
       final ConfigurableApplicationContext context = SpringApplication.run(PG1Application.class, args);
       BrowserUtil.localHost(context.getEnvironment());
     }
-    catch (Exception aE)
+    catch (Throwable aE)
     {
       logger.error("BIG ERROR", aE);
     }

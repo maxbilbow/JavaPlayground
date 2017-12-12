@@ -1,49 +1,51 @@
 package com.maxbilbow.common.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by bilbowm (Max Bilbow) on 04/01/2016.
  */
 public class OSUtil
 {
-
-  private static String OS = System.getProperty("os.name").toLowerCase();
-
-  public static void printOS() {
-
-    System.out.println(OS);
-
+  private static final String OS;
+  
+  static
+  {
+    final Logger logger = LoggerFactory.getLogger(OSUtil.class);
+    OS = System.getProperty("os.name").toLowerCase();
     if (isWindows()) {
-      System.out.println("This is Windows");
+      logger.info("OS is Windows");
     } else if (isMac()) {
-      System.out.println("This is Mac");
+      logger.info("OS is Mac");
     } else if (isUnix()) {
-      System.out.println("This is Unix or Linux");
+      logger.info("OS is Unix or Linux");
     } else if (isSolaris()) {
-      System.out.println("This is Solaris");
+      logger.info("OS is Solaris");
     } else {
-      System.out.println("Your OS is not support!!");
+      logger.warn("OS ("+OS+")is not known to "+OSUtil.class.getSimpleName());
     }
   }
-
-  static boolean isWindows() {
+  
+  public static boolean isWindows() {
 
     return (OS.contains("win"));
 
   }
-
-  static boolean isMac() {
+  
+  public static boolean isMac() {
 
     return (OS.contains("mac"));
 
   }
 
-  private static boolean isUnix() {
+  public static boolean isUnix() {
 
     return (OS.contains("nix") || OS.contains("nux") || OS.contains("aix"));
 
   }
-
-  private static boolean isSolaris() {
+  
+  public static boolean isSolaris() {
 
     return (OS.contains("sunos"));
 
