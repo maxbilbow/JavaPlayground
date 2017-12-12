@@ -16,11 +16,7 @@ public class PG1Application
     {
       logger.info("Launching BFP");
       final ConfigurableApplicationContext context = SpringApplication.run(PG1Application.class, args);
-    
-      final int port = context.getEnvironment().getProperty("server.port",Integer.class,8080);
-      final String ctxPath = context.getEnvironment().getProperty("server.contextPath");
-      logger.info("Launching Browser on port: " + port + ", path: " + ctxPath);
-      BrowserUtil.launch(port,ctxPath);
+      BrowserUtil.localHost(context.getEnvironment());
     }
     catch (Exception aE)
     {

@@ -1,4 +1,5 @@
-com\maxbilbow\common\util\FileUtils$HashingFunction.class
-com\maxbilbow\common\util\FileUtils.class
-com\maxbilbow\common\util\Browser.class
-com\maxbilbow\common\util\OSValidator.class
+com\maxbilbow\common\util\BrowserUtil.class
+com\maxbilbow\common\util\ChecksumUtil.class
+com\maxbilbow\common\util\OSUtil.class
+com\maxbilbow\common\util\ChecksumUtil$HashingFunction.class
+com\maxbilbow\common\util\ProjectUtils.class
