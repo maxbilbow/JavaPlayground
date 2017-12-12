@@ -2,7 +2,7 @@ package com.maxbilbow.common.util;
 
 import org.junit.Test;
 
-public class FileUtilsTest
+public class ChecksumUtilTest
 {
   
   @Test

@@ -3,7 +3,8 @@ package com.maxbilbow.common.util;
 /**
  * Created by bilbowm (Max Bilbow) on 04/01/2016.
  */
-public class OSValidator {
+public class OSUtil
+{
 
   private static String OS = System.getProperty("os.name").toLowerCase();
 

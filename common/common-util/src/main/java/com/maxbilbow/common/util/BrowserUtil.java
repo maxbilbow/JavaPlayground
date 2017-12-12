@@ -9,7 +9,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 
-public class Browser {
+public class BrowserUtil
+{
   
   public static void launch()
   {
@@ -40,7 +41,7 @@ public class Browser {
     else
       url = "http://"+address;
     
-    final Logger logger = LoggerFactory.getLogger(Browser.class);
+    final Logger logger = LoggerFactory.getLogger(BrowserUtil.class);
     if(Desktop.isDesktopSupported()){
       Desktop desktop = Desktop.getDesktop();
       try {
@@ -51,7 +52,7 @@ public class Browser {
     }else{
       Runtime runtime = Runtime.getRuntime();
 //      String os = System.getProperty("os.name");
-      if (OSValidator.isWindows()) {
+      if (OSUtil.isWindows()) {
         final String[] cmd = new String[4];
         cmd[0] = "cmd.exe";
         cmd[1] = "/C";
@@ -64,7 +65,7 @@ public class Browser {
         }
       }
       else {
-        String cmd = OSValidator.isMac() ? "open " : "xdg-open ";
+        String cmd = OSUtil.isMac() ? "open " : "xdg-open ";
         try {
           runtime.exec(cmd + url);
         } catch (IOException e) {

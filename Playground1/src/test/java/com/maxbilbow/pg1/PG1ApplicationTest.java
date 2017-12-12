@@ -1,6 +1,6 @@
 package com.maxbilbow.pg1;
 
-import com.maxbilbow.common.util.FileUtils;
+import com.maxbilbow.common.util.ChecksumUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,6 +13,6 @@ public class PG1ApplicationTest
   @Test
   public void test() throws IOException, URISyntaxException
   {
-    Assert.assertTrue(FileUtils.getMavenProjectPath("").endsWith("Playground1"));
+    Assert.assertTrue(ChecksumUtil.getMavenProjectPath("").endsWith("Playground1"));
   }
 }
