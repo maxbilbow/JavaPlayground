@@ -17,7 +17,7 @@ public class NumberConverterTest
 {
   
   @Test
-  public void roundLargeNumbers()
+  public void roundLargeNumbers() throws ObjectConversionException
   {
   
     final NumberConverter converter = new NumberConverter(true);
@@ -28,7 +28,7 @@ public class NumberConverterTest
   }
   
   @Test
-  public void overflowLargeNumbers()
+  public void overflowLargeNumbers() throws ObjectConversionException
   {
     
     final NumberConverter converter = new NumberConverter(false,false,true);
@@ -39,7 +39,7 @@ public class NumberConverterTest
   }
   
   @Test(expected = ArithmeticException.class)
-  public void failLargeNumbers()
+  public void failLargeNumbers() throws ObjectConversionException
   {
     
     final NumberConverter converter = new NumberConverter(false, true, false);
@@ -50,7 +50,7 @@ public class NumberConverterTest
   }
   
   @Test
-  public void roundDecimals()
+  public void roundDecimals() throws ObjectConversionException
   {
     
     final NumberConverter converter = new NumberConverter(false, true);
@@ -61,7 +61,7 @@ public class NumberConverterTest
   }
   
   @Test(expected = ArithmeticException.class)
-  public void doNotRoundDecimals()
+  public void doNotRoundDecimals() throws ObjectConversionException
   {
     
     final NumberConverter converter = new NumberConverter(false, false);
@@ -102,7 +102,7 @@ public class NumberConverterTest
     }
   
     @Test
-    public void convert()
+    public void convert() throws ObjectConversionException
     {
       Assume.assumeNotNull(castTo);
       final Number result = converter.convert(input,castTo);
@@ -110,7 +110,7 @@ public class NumberConverterTest
     }
   
     @Test
-    public void testNullDefault()
+    public void testNullDefault() throws ObjectConversionException
     {
       Assume.assumeNotNull(nullDefault);
       final Number result = converter.nullDefault(input,nullDefault);

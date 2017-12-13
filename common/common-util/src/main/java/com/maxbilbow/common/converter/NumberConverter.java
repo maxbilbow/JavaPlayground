@@ -1,16 +1,27 @@
 package com.maxbilbow.common.converter;
 
 import com.maxbilbow.common.maths.DecimalUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Objects;
 
-public class NumberConverter
+public class NumberConverter implements Converter
 {
   private boolean roundLargeValues = false;
   private boolean roundDecimals = true;
   private boolean allowOverflow = false;
+  
+  @Override
+  public boolean accepts(final Object valueToConvert, final Class<?> toClass)
+  {
+    if (Number.class.isAssignableFrom(toClass))
+      return true;
+    else if (toClass == String.class)
+      return valueToConvert == null || valueToConvert instanceof Number;
+    
+    return false;
+  }
   
   public NumberConverter(final boolean aRoundLargeValues)
   {
@@ -29,22 +40,43 @@ public class NumberConverter
     allowOverflow = aAllowOverflow;
   }
   
-  public <N extends Number> N nullDefault(final Number n, N nullDefault)
+  
+  @Override
+  @SuppressWarnings("unchecked")
+  public <N> N convert(final Object object, final Class<N> toClass) throws ObjectConversionException
   {
-    Objects.requireNonNull(nullDefault);
-    if (n == null)
-      return nullDefault;
+    if (object == null)
+      return null;
     
-    return convert(n, (Class<N>) nullDefault.getClass());
+    if (toClass.isAssignableFrom(object.getClass()))
+      return (N) object;
+    
+    if (toClass == String.class && object instanceof Number)
+      return (N) toString((Number) object);
+    if (object instanceof Number)
+      return (N) convertNumber((Number) object, (Class<? extends Number>) toClass);
+    else if (object instanceof CharSequence)
+      return (N) parse(object.toString(), (Class<? extends Number>) toClass);
+    
+    throw new ObjectConversionException(object, toClass);
+  }
+  
+  public String toString(final Number n)
+  {
+    return n != null ? n.toString() : null;
   }
   
   public <N extends Number> N parse(final String aStringValue, final Class<N> aClassType)
+          throws ObjectConversionException
   {
-    return convert(new BigDecimal(aStringValue),aClassType);
+    if (StringUtils.isBlank(aStringValue))
+      return null;
+    
+    return convertNumber(new BigDecimal(aStringValue),aClassType);
   }
   
   @SuppressWarnings("unchecked")
-  public <N extends Number> N convert(final Number n, final Class<N> newClass)
+  public <N extends Number> N convertNumber(final Number n, final Class<N> newClass) throws ObjectConversionException
   {
     if (n == null)
       return null;
@@ -52,7 +84,7 @@ public class NumberConverter
     if (newClass.isAssignableFrom(n.getClass()))
       return (N) n;
     
-    BigDecimal decimal = new BigDecimal(n.toString());
+    BigDecimal decimal = n instanceof BigDecimal ? (BigDecimal) n : new BigDecimal(n.toString());
     if (newClass == BigDecimal.class)
       return (N) decimal;
     

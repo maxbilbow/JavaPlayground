@@ -1,5 +1,6 @@
 package com.maxbilbow.experimental.converter;
 
+import com.maxbilbow.common.converter.Converter;
 import com.maxbilbow.common.converter.NumberConverter;
 import com.maxbilbow.common.converter.ObjectConversionException;
 import org.apache.commons.lang3.StringUtils;
@@ -13,10 +14,8 @@ import java.time.temporal.Temporal;
 import java.util.Date;
 import java.util.Objects;
 
-public class ObjectConverter
+public class ObjectConverter implements Converter
 {
- 
-  
   private NumberConverter numberConverter;
   
   private DateTimeConverter dateTimeConverter;
@@ -28,33 +27,12 @@ public class ObjectConverter
     dateTimeConverter = aDateTimeConverter;
   }
   
-  /**
-   * Converts {@code aItemValue} to the same class type as {@code aNullDefault}.
-   *
-   * If {@code aItemValue} is null, {@code aNullDefault} is returned.
-   *
-   * @see #convert(Object, Class)
-   *
-   * @param aItemValue
-   * @param aNullDefault
-   * @param <T>
-   * @return
-   *
-   * @throws NullPointerException if {@code aNullDefault} is null.
-   * @throws ClassCastException if conversion fails or is not supported.
-   */
-  public <T> T nullDefault(final Object aItemValue, final T aNullDefault)
+  @Override
+  public boolean accepts(final Object valueToConvert, final Class<?> toClass)
   {
-    if (aNullDefault == null)
-      throw new NullPointerException("A Default value must be provided");
-    
-    if (aItemValue == null)
-      return aNullDefault;
-    
-    @SuppressWarnings("unchecked")
-    final Class<T> conversionClass = (Class<T>) aNullDefault.getClass();
-    return convert(aItemValue, conversionClass);
+    return true;
   }
+  
   
   /**
    * Converts aItemValue to the aClassType if possible.
@@ -82,7 +60,8 @@ public class ObjectConverter
    * @throws NullPointerException if {@code aClassType} is null
    */
   @SuppressWarnings("unchecked")
-  public <T> T convert(Object aItemValue, Class<T> aClassType)
+  @Override
+  public <T> T convert(Object aItemValue, Class<T> aClassType) throws ObjectConversionException
   {
     if (aClassType == null)
       throw new NullPointerException("Conversion class type must not be null!");

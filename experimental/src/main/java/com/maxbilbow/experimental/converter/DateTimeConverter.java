@@ -52,7 +52,7 @@ public class DateTimeConverter
     return formatters;
   }
   
-  public <T> T convert(Object aValue, Class<T> newClass)
+  public <T> T convert(Object aValue, Class<T> newClass) throws ObjectConversionException
   {
     if (aValue == null)
       return null;
@@ -78,7 +78,7 @@ public class DateTimeConverter
     
   }
   
-  private <T> T parse(final CharSequence value, final Class<T> aNewClass)
+  private <T> T parse(final CharSequence value, final Class<T> aNewClass) throws ObjectConversionException
   {
     if (StringUtils.isBlank(value))
       return null;
@@ -119,6 +119,7 @@ public class DateTimeConverter
   
   @SuppressWarnings("unchecked")
   private <T> T convertTemporalAccessor(final TemporalAccessor accessor, Class<T> newClass)
+          throws ObjectConversionException
   {
     final Temporal dateOrTime = getMostDetailedType(accessor);
     if (dateOrTime != null)

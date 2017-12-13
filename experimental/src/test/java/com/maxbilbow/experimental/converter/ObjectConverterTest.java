@@ -74,7 +74,7 @@ public class ObjectConverterTest
   }
 
   @Test(expected = ObjectConversionException.class)
-  public void classCastException()
+  public void classCastException() throws ObjectConversionException
   {
     Assume.assumeTrue(this.message + " should NOT throw an exception",this.throwsError);
     converter.convert(in, out.getClass());

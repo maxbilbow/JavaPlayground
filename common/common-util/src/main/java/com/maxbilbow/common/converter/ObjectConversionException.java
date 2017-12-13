@@ -2,7 +2,7 @@ package com.maxbilbow.common.converter;
 
 import com.sun.istack.internal.NotNull;
 
-public class ObjectConversionException extends RuntimeException
+public class ObjectConversionException extends Exception
 {
   private static final String ERR_MSG_CONVERT = "Unsupported conversion from %s (%s) to %s";
   
