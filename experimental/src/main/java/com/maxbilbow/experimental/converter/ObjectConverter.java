@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class ObjectConverter
 {
-  private static final String ERR_MSG_CONVERT = "Could not convert %s (%s) to %s";
+ 
   
   private NumberConverter numberConverter;
   
@@ -147,24 +147,19 @@ public class ObjectConverter
         }
       }
     }
+    catch (ObjectConversionException e)
+    {
+      throw e;
+    }
     catch (RuntimeException e)
     {
-      throw new ObjectConversionException(
-              String.format(ERR_MSG_CONVERT,
-                      aItemValue,
-                      aItemValue.getClass().getSimpleName(),
-                      aClassType.getSimpleName()) + ": " + e.getMessage(),e);
+      throw new ObjectConversionException(aItemValue, aClassType,e);
     }
     
     
     if (newItemValue == null)
-    {
-      throw new ObjectConversionException(
-              String.format(ERR_MSG_CONVERT,
-                      aItemValue,
-                      aItemValue.getClass().getSimpleName(),
-                      aClassType.getSimpleName()));
-    }
+      throw new ObjectConversionException(aItemValue, aClassType);
+    
     
     return (T) newItemValue;
   }

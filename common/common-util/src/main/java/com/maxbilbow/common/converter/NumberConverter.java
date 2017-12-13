@@ -89,7 +89,7 @@ public class NumberConverter
     else if (newClass == BigInteger.class)
       result = roundDecimals ? decimal.toBigIntegerExact() : decimal.toBigInteger();
     else
-      throw new UnsupportedOperationException();
+      throw new ObjectConversionException(n,newClass);
   
     return (N) result;
   }

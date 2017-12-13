@@ -1,5 +1,6 @@
 package com.maxbilbow.experimental.converter;
 
+import com.maxbilbow.common.converter.ObjectConversionException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Timestamp;
@@ -73,7 +74,7 @@ public class DateTimeConverter
         return parse((CharSequence) aValue, newClass);
     }
     
-    throw new ClassCastException(String.format("Unsupported conversion from %s to %s", aValue, newClass.getSimpleName()));
+    throw new ObjectConversionException(aValue, newClass);
     
   }
   
@@ -117,14 +118,14 @@ public class DateTimeConverter
   }
   
   @SuppressWarnings("unchecked")
-  private <T> T convertTemporalAccessor(TemporalAccessor accessor, Class<T> newClass)
+  private <T> T convertTemporalAccessor(final TemporalAccessor accessor, Class<T> newClass)
   {
-    accessor = getMostDetailedType(accessor);
-    if (accessor != null)
+    final Temporal dateOrTime = getMostDetailedType(accessor);
+    if (dateOrTime != null)
     {
-      if (accessor instanceof LocalDateTime)
+      if (dateOrTime instanceof LocalDateTime)
       {
-        final LocalDateTime dateTime = (LocalDateTime) accessor;
+        final LocalDateTime dateTime = (LocalDateTime) dateOrTime;
         if (newClass == LocalDate.class)
           return (T) dateTime.toLocalDate();
         else if (newClass == LocalDateTime.class)
@@ -143,18 +144,16 @@ public class DateTimeConverter
             return (T) new java.sql.Date(millis);
         }
       }
-      else if (accessor instanceof LocalTime)
+      else if (dateOrTime instanceof LocalTime)
       {
         if (newClass == LocalTime.class)
-          return (T) accessor;
+          return (T) dateOrTime;
       }
     }
-    
-    
-    throw new ClassCastException(String.format("Unsupported conversion from %s to %s", accessor, newClass.getSimpleName()));
+    throw new ObjectConversionException(accessor, newClass);
   }
   
-  private TemporalAccessor getMostDetailedType(final TemporalAccessor aAccessor)
+  private Temporal getMostDetailedType(final TemporalAccessor aAccessor)
   {
     if (aAccessor.isSupported(ChronoField.YEAR))
     {
