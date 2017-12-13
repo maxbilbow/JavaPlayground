@@ -43,6 +43,7 @@ public class NumberConverter
     return convert(new BigDecimal(aStringValue),aClassType);
   }
   
+  @SuppressWarnings("unchecked")
   public <N extends Number> N convert(final Number n, final Class<N> newClass)
   {
     if (n == null)
@@ -52,6 +53,8 @@ public class NumberConverter
       return (N) n;
     
     BigDecimal decimal = new BigDecimal(n.toString());
+    if (newClass == BigDecimal.class)
+      return (N) decimal;
     
     if (roundDecimals && decimal.scale() > 0)
       decimal = decimal.setScale(0, BigDecimal.ROUND_HALF_UP);

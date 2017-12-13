@@ -1,5 +1,8 @@
-package com.maxbilbow.common.converter;
+package com.maxbilbow.experimental.converter;
 
+
+import com.maxbilbow.common.converter.NumberConverter;
+import com.maxbilbow.common.converter.ObjectConversionException;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
@@ -11,24 +14,22 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RunWith(Parameterized.class)
 public class ObjectConverterTest
 {
-  
+
   private final Object in, out;
   private final String message;
   private boolean throwsError;
   private static final ObjectConverter converter = new ObjectConverter(
           new NumberConverter(true),
-          "yyyyMMdd","HHmmss","yyyyMMdd HHmmss"
+          new DateTimeConverter("yyyyMMdd","HHmmss","yyyyMMdd HHmmss", ZoneId.systemDefault(), Locale.getDefault())
   );
-  
+
   public ObjectConverterTest(Object aIn, Object aOut, boolean aThrows)
   {
     this.throwsError = aThrows;
@@ -38,11 +39,12 @@ public class ObjectConverterTest
             in != null ? in.getClass().getSimpleName() : "null",
             in,out.getClass().getSimpleName(),out);
   }
-  
+
   @Test
   public void convertObject() throws Exception
   {
     Assume.assumeFalse(this.message + " SHOULD throw an exception", this.throwsError);
+    System.out.println(message);
     final Object result = converter.convert(in, out.getClass());
     if (in == null)
       Assert.assertNull(message, result);
@@ -53,7 +55,7 @@ public class ObjectConverterTest
       {
         if (out instanceof Comparable)
           Assert.assertTrue(message,((Comparable) out).compareTo(result) == 0);
-        
+
         final BigDecimal expected = new BigDecimal(out.toString());
         final BigDecimal actual = new BigDecimal(result.toString());
         Assert.assertTrue(message,expected.compareTo(actual) == 0);
@@ -68,17 +70,17 @@ public class ObjectConverterTest
         Assert.assertEquals(message, out,result);
       }
     }
-    System.out.println(message);
+
   }
-  
-  @Test(expected = ClassCastException.class)
+
+  @Test(expected = ObjectConversionException.class)
   public void classCastException()
   {
     Assume.assumeTrue(this.message + " should NOT throw an exception",this.throwsError);
     converter.convert(in, out.getClass());
   }
-  
-  
+
+
   /**
    * Integer
    * Long
@@ -97,32 +99,32 @@ public class ObjectConverterTest
   public static List<Object[]> getParameters()
   {
     final List<Object[]> params = new ArrayList<>();
-    
+
     //null
     params.add(new Object[]{null, "should be null",false});
-    
+
     //Errors
     params.add(new Object[]{"One",1,true}); //throws an error
-    
+
     //Primitives
     params.add(new Object[]{"Hello, world.","Hello, world.",false});//string
-    
+
     //toString
     params.add(new Object[]{new StringBuilder("Hello, world."),"Hello, world.",false});//string
-    
+
     //Char
     params.add(new Object[]{"Hello, world.",'H',false});
     params.add(new Object[]{1,'1',false});
-    
+
     params.add(new Object[]{"True",true,false});//bool
     params.add(new Object[]{true,true,false});//bool
-    
+
     params.add(new Object[]{"4.2",new BigDecimal("4.2"),false});
     params.add(new Object[]{new BigDecimal("4.2"),new BigDecimal("4.2"),false});
-    
+
     params.add(new Object[]{"42",new BigInteger("42"),false});
     params.add(new Object[]{new BigInteger("42"),new BigInteger("42"),false});
-    
+
     //Numbers
     {
       final String string = "42";
@@ -134,8 +136,8 @@ public class ObjectConverterTest
       final float _float = Float.parseFloat(string);
       final BigInteger bigInt = BigInteger.valueOf(42);
       final BigDecimal bigDecimal = new BigDecimal(string);
-      
-      
+
+
       for (Object expected :  new Object[]{string,_int,_long,bigInt,bigDecimal,_double,_float,_short,_byte})
       {
         params.add(new Object[]{string, expected, false});
@@ -148,28 +150,28 @@ public class ObjectConverterTest
         params.add(new Object[]{_short, expected, false});
         params.add(new Object[]{_byte, expected, false});
       }
-      
+
       //Int max value
       params.add(new Object[]{new BigInteger(String.valueOf(Integer.MAX_VALUE)), Integer.MAX_VALUE, false});
       params.add(new Object[]{Integer.valueOf(Integer.MAX_VALUE).longValue() + 1, Integer.MAX_VALUE, false}); //TODO: what should this do?
-      
+
       //Long max value
       params.add(new Object[]{new BigInteger(String.valueOf(Long.MAX_VALUE)), Long.MAX_VALUE, false});
       params.add(new Object[]{new BigInteger(String.valueOf(Long.MAX_VALUE)).add(new BigInteger("1")), Long.MAX_VALUE,
               false}); //TODO: what should this do?
-      
+
       //Short MAX value
       params.add(new Object[]{Long.MAX_VALUE, Short.MAX_VALUE, false}); //throws error
-      
+
       //Byte MAX value
       params.add(new Object[]{Long.MAX_VALUE, Byte.MAX_VALUE, false}); //throws error
-      
+
       //Double MAX value
       params.add(new Object[]{BigDecimal.valueOf(Long.MAX_VALUE), Double.valueOf(String.valueOf(Long.MAX_VALUE)), false});
-      
+
       //Float MAX value
       params.add(new Object[]{BigDecimal.valueOf(Long.MAX_VALUE), Float.valueOf(String.valueOf(Long.MAX_VALUE)), false});
-      
+
     }
     //DATES
     {
@@ -180,7 +182,7 @@ public class ObjectConverterTest
       final Date date = new Date(millis);
       final Date sqlDate = new java.sql.Date(millis);
       final Timestamp timestamp = new Timestamp(millis);
-      
+
       for (final Object expected : new Object[] {localDate,datetime,date,sqlDate, timestamp})
       {
         System.out.println(expected);
@@ -191,14 +193,14 @@ public class ObjectConverterTest
         params.add(new Object[]{sqlDate, expected, false});
         params.add(new Object[]{timestamp, expected, false});
       }
-      
+
       params.add(new Object[]{
               LocalDateTime.of(2017,11,16,0,0,56),
               new Timestamp(Date.parse("Thu, 16 Nov 2017 00:00:56 GMT")),
               false});
-      
+
     }
-    
+
     {
       //Assignable types that can be cast and returned.
       class Foo

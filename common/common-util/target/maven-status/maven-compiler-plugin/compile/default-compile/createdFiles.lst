@@ -1,5 +1,10 @@
-com\maxbilbow\common\util\BrowserUtil.class
-com\maxbilbow\common\util\ChecksumUtil.class
+com\maxbilbow\common\maths\DecimalUtils.class
 com\maxbilbow\common\util\OSUtil.class
+com\maxbilbow\common\util\BrowserUtil.class
 com\maxbilbow\common\util\ChecksumUtil$HashingFunction.class
+com\maxbilbow\common\maths\RandomUtil.class
+com\maxbilbow\common\util\NumberUtil.class
+com\maxbilbow\common\misc\Chooser.class
 com\maxbilbow\common\util\ProjectUtils.class
+com\maxbilbow\common\converter\NumberConverter.class
+com\maxbilbow\common\util\ChecksumUtil.class

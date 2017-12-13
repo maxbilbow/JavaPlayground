@@ -1,12 +1,14 @@
-package com.maxbilbow.common.converter;
+package com.maxbilbow.experimental.converter;
 
+import com.maxbilbow.common.converter.NumberConverter;
+import com.maxbilbow.common.converter.ObjectConversionException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.Temporal;
 import java.util.Date;
 import java.util.Objects;
@@ -17,16 +19,13 @@ public class ObjectConverter
   
   private NumberConverter numberConverter;
   
-  private DateTimeFormatter dateParser, timeParser; //TODO: handle different formats on conversion
+  private DateTimeConverter dateTimeConverter;
   
   public ObjectConverter(final NumberConverter aNumberConverter,
-                         final String dateFormat,
-                         final String timeFormat,
-                         final String dateTimeFormat)
+                         final DateTimeConverter aDateTimeConverter)
   {
     numberConverter = Objects.requireNonNull(aNumberConverter);
-    dateParser = DateTimeFormatter.ofPattern(dateFormat);
-    timeParser = DateTimeFormatter.ofPattern(timeFormat);
+    dateTimeConverter = aDateTimeConverter;
   }
   
   /**
@@ -79,7 +78,7 @@ public class ObjectConverter
    * @param <T>
    * @return converted object or null if {@code aItemValue} is null or a blank string
    *
-   * @throws ClassCastException if conversion fails or is not supported.
+   * @throws ObjectConversionException if conversion fails or is not supported.
    * @throws NullPointerException if {@code aClassType} is null
    */
   @SuppressWarnings("unchecked")
@@ -111,64 +110,23 @@ public class ObjectConverter
         else
           newItemValue = numberConverter.parse(aItemValue.toString(),(Class<? extends Number>) aClassType);
       }
-      else if (aClassType == String.class)
+      else if (aClassType == String.class || aClassType == CharSequence.class)
       {
-        if (aItemValue instanceof Temporal)
-          newItemValue = aItemValue.toString();//TODO dateTimeConverter
-        else if (aItemValue instanceof Date)
-          newItemValue = aItemValue.toString();
+        if (aItemValue instanceof Temporal || aItemValue instanceof Date)
+          newItemValue = dateTimeConverter.convert(aItemValue, aClassType);
         else
           newItemValue = aItemValue.toString();
       }
       else if (aClassType == Character.class)
       {
-        if (aItemValue instanceof String || aItemValue instanceof Enum || aItemValue instanceof Number)
+        if (aItemValue instanceof CharSequence || aItemValue instanceof Enum || aItemValue instanceof Number)
           newItemValue = aItemValue.toString().charAt(0);
+        else if (aItemValue instanceof Boolean)
+          newItemValue = Character.toUpperCase(aItemValue.toString().charAt(0));
       }
-      else if (aClassType == LocalDate.class)
+      else if (Temporal.class.isAssignableFrom(aClassType) || Date.class.isAssignableFrom(aClassType))
       {
-        if (aItemValue instanceof LocalDateTime)
-          newItemValue = ((LocalDateTime) aItemValue).toLocalDate();
-        else if (aItemValue instanceof String)
-          newItemValue = LocalDate.parse((String) aItemValue, dateParser);
-        else if (aItemValue instanceof Date)
-          newItemValue = LocalDateTime.ofInstant(Instant.ofEpochMilli(((Date) aItemValue).getTime()), ZoneId.systemDefault()).toLocalDate();
-      }
-      else if (aClassType == LocalDateTime.class)
-      {
-        if (aItemValue instanceof LocalDate)
-          newItemValue = ((LocalDate) aItemValue).atStartOfDay();
-        else if (aItemValue instanceof String)
-          newItemValue = LocalDate.parse((String) aItemValue, dateParser).atStartOfDay();
-        else if (aItemValue instanceof Date)
-          newItemValue = LocalDateTime.ofInstant(Instant.ofEpochMilli(((Date) aItemValue).getTime()),ZoneId.systemDefault());
-      }
-      else if (aClassType == LocalTime.class)
-      {
-        if (aItemValue instanceof String)
-          newItemValue = LocalTime.parse((String) aItemValue, timeParser);
-      }
-      else if (Date.class.isAssignableFrom(aClassType))
-      {
-        final Long millis;
-        if (aItemValue instanceof LocalDateTime)
-          millis = ((LocalDateTime) aItemValue).toInstant(ZoneOffset.UTC).toEpochMilli();
-        else if (aItemValue instanceof LocalDate)
-          millis = ((LocalDate) aItemValue).atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli();
-        else if (aItemValue instanceof Date)
-          millis = ((Date) aItemValue).getTime();
-        else if (aItemValue instanceof String)
-          millis = LocalDate.parse((String) aItemValue, dateParser).atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli();
-        else
-          millis = null;
-        
-        if (millis != null)
-          if (aClassType == Timestamp.class)
-            newItemValue = new Timestamp(millis);
-          else if (aClassType == Date.class)
-            newItemValue = new Date(millis);
-          else if (aClassType == java.sql.Date.class)
-            newItemValue = new java.sql.Date(millis);
+        newItemValue = dateTimeConverter.convert(aItemValue, aClassType);
       }
       else if (aClassType == Boolean.class)
       {
@@ -191,17 +149,17 @@ public class ObjectConverter
     }
     catch (RuntimeException e)
     {
-      throw new ClassCastException(
+      throw new ObjectConversionException(
               String.format(ERR_MSG_CONVERT,
                       aItemValue,
                       aItemValue.getClass().getSimpleName(),
-                      aClassType.getSimpleName()) + ": " + e.getMessage());
+                      aClassType.getSimpleName()) + ": " + e.getMessage(),e);
     }
     
     
     if (newItemValue == null)
     {
-      throw new ClassCastException(
+      throw new ObjectConversionException(
               String.format(ERR_MSG_CONVERT,
                       aItemValue,
                       aItemValue.getClass().getSimpleName(),
