@@ -48,6 +48,8 @@ public class DecimalUtils
         return MAX_SHORT;
       if (n.getSimpleName().contains("Byte"))
         return MAX_BYTE;
+      else if (n.getSimpleName().contains("Fraction"))
+        return MAX_INT;
       try
       {
         return new BigDecimal(aClass.getField("MAX_VALUE").get(null).toString());
@@ -77,6 +79,8 @@ public class DecimalUtils
         return MIN_SHORT;
       if (n.getSimpleName().contains("Byte"))
         return MIN_BYTE;
+      else if (n.getSimpleName().contains("Fraction"))
+        return MIN_INT;
       try
       {
         return new BigDecimal(aClass.getField("MIN_VALUE").get(null).toString());

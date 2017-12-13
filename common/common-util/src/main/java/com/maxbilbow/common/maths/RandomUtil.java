@@ -28,7 +28,21 @@ public class RandomUtil
     
   }
   
- 
+  public static byte between(byte min, byte max)
+  {
+    return (byte) between((long) min, (long) max);
+  }
+  
+  public static short between(short min, short max)
+  {
+    return (short) between((long) min, (long) max);
+  }
+  
+  public static int between(int min, int max)
+  {
+    long result = between((long) min, (long) max);
+    return (int) result;//(int) between((long) min, (long) max);
+  }
   
   public static long between(long min, long max)
   {
@@ -45,6 +59,11 @@ public class RandomUtil
     return Math.round(betweenDouble(min,max));
   }
   
+  public static float between(float min, float max)
+  {
+    return (float) between((double) min, (double) max);
+  }
+  
   public static double between(double min, double max)
   {
     if (min == max)
@@ -57,7 +76,10 @@ public class RandomUtil
       max = tmp;
     }
     
-    return betweenDouble(min, max);
+    if (max-min < Double.MAX_VALUE)
+      return betweenDouble(min, max);
+    else
+      return betweenBigDecimal(BigDecimal.valueOf(min), BigDecimal.valueOf(max)).doubleValue();
   }
   
   public static <N extends Number> N between(N aMin, N aMax)
@@ -72,7 +94,7 @@ public class RandomUtil
               && max.compareTo(DecimalUtils.MAX_DOUBLE) < 0 && max.compareTo(DecimalUtils.MIN_DOUBLE) > 0)
         return convert(between(min.doubleValue(),max.doubleValue()),nClass);
       
-      return convert(betweenDecimal(min, max), nClass);
+      return convert(betweenBigDecimal(min, max), nClass);
     }
     catch (ObjectConversionException e)
     {
@@ -82,15 +104,51 @@ public class RandomUtil
   
   private static double betweenDouble(double min, double max)
   {
-    max -= 1.0;
-    double diff = 0; //to cope with zero value
-    if (Double.compare(min,0.0) <= 0)
+    max -= 1.0;//to keep within bounts
+    final double diff;
     {
-      diff = 1 - min;
-      min+=diff;
-      max+=diff;
+      final double diff1 = 1 - min;//make min non-negative
+      double diff2 = 0; //to cope with zero value
+  
+      min += diff1;
+      max += diff1;
+  
+      if (Double.compare(max, 0) == 0)
+        diff2 = 1;
+  
+      min += diff2;
+      max += diff2;
+  
+      diff = diff1 + diff2;
     }
+  
     return (min + (Math.random() * max)) - diff;
+  }
+  
+  private static BigDecimal betweenBigDecimal(BigDecimal min, BigDecimal max)
+  {
+    max = max.subtract(BigDecimal.ONE);
+    final BigDecimal diff;
+    {
+      BigDecimal diff1 = BigDecimal.ONE.subtract(min),//Set as 1.
+              diff2 = BigDecimal.ZERO; //to cope with zero value
+     
+      
+      min = min.add(diff1);
+      max = max.add(diff1);
+    
+      if (max.compareTo(BigDecimal.ZERO) == 0)
+        diff2 = BigDecimal.ONE;
+    
+      min = min.add(diff2);
+      max = max.add(diff2);
+    
+      diff = diff1.add(diff2);
+    }
+    
+    
+    
+    return min.add((BigDecimal.valueOf(Math.random()).multiply(max))).subtract(diff);
   }
   
   private static BigDecimal betweenDecimal(final BigDecimal aMIN, final BigDecimal aMAX)
@@ -105,8 +163,6 @@ public class RandomUtil
       min = max;
       max = tmp;
     }
-    
-  
     
     final BigDecimal diff = BigDecimal.ONE.subtract(min);
     

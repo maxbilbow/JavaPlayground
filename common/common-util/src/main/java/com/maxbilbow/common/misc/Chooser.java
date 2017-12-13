@@ -1,6 +1,7 @@
 package com.maxbilbow.common.misc;
 
 import com.google.gag.annotation.remark.Win;
+import com.maxbilbow.common.maths.RandomUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +29,7 @@ public class Chooser
     }
   
     final int max = aSelection.length - 1;
-    final int choice = (int) Math.round(Math.random() * max);
+    final int choice = RandomUtil.between(0,max);
   
     return aSelection[choice];
   }
