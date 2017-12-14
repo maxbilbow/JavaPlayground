@@ -124,13 +124,13 @@ public class NumberConverter implements Converter
       if (newClass == BigInteger.class)
         result = integer;
       else if (newClass == Integer.class)
-        result = allowOverflow ? decimal.intValue() : decimal.intValueExact();
+        result = allowOverflow ? integer.intValue() : integer.intValueExact();
       else if (newClass == Short.class)
-        result = allowOverflow ? decimal.shortValue() : decimal.shortValueExact();
+        result = allowOverflow ? integer.shortValue() : integer.shortValueExact();
       else if (newClass == Long.class)
-        result = allowOverflow ? decimal.longValue() : decimal.longValueExact();
+        result = allowOverflow ? integer.longValue() : integer.longValueExact();
       else if (newClass == Byte.class)
-        result = allowOverflow ? decimal.byteValue() : decimal.byteValueExact();
+        result = allowOverflow ? integer.byteValue() : integer.byteValueExact();
       else
         try
         {
