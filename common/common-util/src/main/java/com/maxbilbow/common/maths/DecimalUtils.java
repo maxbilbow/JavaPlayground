@@ -48,7 +48,9 @@ public class DecimalUtils
         return MAX_SHORT;
       if (n.getSimpleName().contains("Byte"))
         return MAX_BYTE;
-      else if (n.getSimpleName().contains("Fraction"))
+      if (n.getSimpleName().contains("Fraction"))
+        return MAX_INT;
+      if (n.getSimpleName().endsWith("Int"))
         return MAX_INT;
       try
       {
@@ -79,7 +81,9 @@ public class DecimalUtils
         return MIN_SHORT;
       if (n.getSimpleName().contains("Byte"))
         return MIN_BYTE;
-      else if (n.getSimpleName().contains("Fraction"))
+      if (n.getSimpleName().contains("Fraction"))
+        return MIN_INT;
+      if (n.getSimpleName().endsWith("Int"))
         return MIN_INT;
       try
       {

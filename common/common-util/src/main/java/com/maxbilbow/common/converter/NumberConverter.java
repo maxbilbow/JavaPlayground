@@ -6,9 +6,12 @@ import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NumberConverter implements Converter
 {
@@ -88,11 +91,68 @@ public class NumberConverter implements Converter
     if (newClass.isAssignableFrom(n.getClass()))
       return (N) n;
   
-    BigDecimal decimal;
+    final BigDecimal decimal = getDecimal(n, newClass);
+  
+  
+    if (newClass == BigDecimal.class)
+      return (N) decimal;
+    
+    final Number result;
+  
+    if (newClass == Double.class)
+      result = decimal.doubleValue();
+    else if (newClass == Float.class)
+      result = decimal.floatValue();
+    else if (newClass.getSimpleName().equals("Fraction"))
+    {
+      try
+      {
+        result = getFraction(decimal, newClass);
+        if (result == null)
+          throw new ObjectConversionException("Could not find constructor for " + newClass.getName(), n, newClass);
+      }
+      catch (IllegalAccessException | InstantiationException | InvocationTargetException aE)
+      {
+        throw new ObjectConversionException(n, newClass, aE);
+      }
+    }
+    else
+    {
+      final BigInteger integer = roundDecimals && decimal.scale() > 0 ?
+              decimal.setScale(0, BigDecimal.ROUND_HALF_UP).toBigInteger() :
+              decimal.toBigIntegerExact();
+      if (newClass == BigInteger.class)
+        result = integer;
+      else if (newClass == Integer.class)
+        result = allowOverflow ? decimal.intValue() : decimal.intValueExact();
+      else if (newClass == Short.class)
+        result = allowOverflow ? decimal.shortValue() : decimal.shortValueExact();
+      else if (newClass == Long.class)
+        result = allowOverflow ? decimal.longValue() : decimal.longValueExact();
+      else if (newClass == Byte.class)
+        result = allowOverflow ? decimal.byteValue() : decimal.byteValueExact();
+      else
+        try
+        {
+          result = reflectiveGuess(decimal, newClass);
+          if (result == null)
+            throw new ObjectConversionException("Could not find suitable constructor for " + newClass.getName(),n, newClass);
+        }
+        catch (IllegalAccessException | InstantiationException | InvocationTargetException aE)
+        {
+          throw new ObjectConversionException(n, newClass, aE);
+        }
+        
+    }
+    return (N) result;
+  }
+  
+  private <N extends Number> BigDecimal getDecimal(final Number n, final Class<N> newClass)
+          throws ObjectConversionException
+  {
+    final BigDecimal decimal;
     if (n instanceof BigDecimal)
     {
-      if (newClass == BigDecimal.class)
-        return (N) n;
       decimal = (BigDecimal) n;
     }
     else
@@ -108,81 +168,93 @@ public class NumberConverter implements Converter
         decimal = new BigDecimal(fraction[0]).divide(new BigDecimal(fraction[1]), MathContext.UNLIMITED);
       }
     }
-  
-  
-    if (newClass == BigDecimal.class)
-      return (N) decimal;
     
-    /*if (roundDecimals && decimal.scale() > 0)
-      decimal = decimal.setScale(0, BigDecimal.ROUND_HALF_UP);*/
+    if (newClass == BigDecimal.class || newClass == BigInteger.class)
+      return decimal;
+    
+    return handleLargeValues(decimal,DecimalUtils.minValue(newClass),DecimalUtils.maxValue(newClass));
+  }
   
-    if (roundLargeValues && newClass != BigInteger.class)
+  private <N extends Number> Number reflectiveGuess(final BigDecimal decimal,
+                                                    final Class<N> newClass)
+          throws IllegalAccessException, InvocationTargetException, InstantiationException
+  {
+    final Map<String,Constructor> constructorMap = new HashMap<>();
+    for (Constructor constructor : newClass.getConstructors())
     {
-      final BigDecimal max, min;
-      max = DecimalUtils.maxValue(newClass);
-      min = DecimalUtils.minValue(newClass);
-      if (max != null && decimal.compareTo(max) > 0)
-        decimal = max;
-      else if (min != null && decimal.compareTo(min) < 0)
-        decimal = min;
+      if (Modifier.isPublic(constructor.getModifiers()) && constructor.getParameterCount() == 1)
+        constructorMap.put(constructor.getParameters()[0].getType().getName().toLowerCase(),constructor);
     }
+    if (constructorMap.isEmpty())
+      return null;
   
-    final boolean useExact = !(allowOverflow && (roundDecimals || decimal.scale() == 0));
+    if (constructorMap.containsKey("bigdecimal"))
+      return (Number) constructorMap.get("bigdecimal").newInstance(decimal);
   
-    final Number result;
+    if (constructorMap.containsKey("double"))
+      return (Number) constructorMap.get("double").newInstance(decimal.doubleValue());
+    
+    if (constructorMap.containsKey("biginteger"))
+      return (Number) constructorMap.get("biginteger").newInstance(allowOverflow ? decimal.toBigInteger() : decimal.toBigIntegerExact());
+      
+    if (constructorMap.containsKey("float"))
+      return (Number) constructorMap.get("float").newInstance(decimal.floatValue());
   
-    if (newClass == Float.class)
-      result = decimal.floatValue();
-    else if (newClass == Double.class)
-      result = decimal.doubleValue();
-    else if (newClass == BigInteger.class)
-      result = roundDecimals ? decimal.toBigIntegerExact() : decimal.toBigInteger();
-    else if (newClass.getSimpleName().equals("Fraction"))
-      try
-      {
-        findConstructor:
-        {
-          for (Constructor constructor : newClass.getConstructors())
-          {
-            if (constructor.getParameterCount() == 1 && constructor.getParameters()[0].getName().equals("double"))
-            {
-              result = (Number) constructor.newInstance(decimal.doubleValue());
-              break findConstructor;
-            }
-          }
+    if (constructorMap.containsKey("long"))
+      return (Number) constructorMap.get("long").newInstance(allowOverflow ? decimal.longValue() : decimal.longValueExact());
   
-          for (Method method : newClass.getDeclaredMethods())
-          {
-            if (method.getReturnType().getSimpleName().equals("Fraction") && method.getParameterCount() == 1 &&
-                    method.getParameters()[0].getType().getName().equals("double"))
-            {
-              result = (Number) method.invoke(null, decimal.doubleValue());
-              break findConstructor;
-            }
-          }
-          throw new ObjectConversionException("Could not find constructor for Fraction", n, newClass);
-        }
-      }
-      catch (IllegalAccessException | InstantiationException | InvocationTargetException aE)
-      {
-        throw new ObjectConversionException(n, newClass, aE);
-      }
-    else
+    if (constructorMap.containsKey("int"))
+      return (Number) constructorMap.get("int").newInstance(allowOverflow ? decimal.intValue() : decimal.intValueExact());
+  
+    if (constructorMap.containsKey("integer"))
+      return (Number) constructorMap.get("integer").newInstance(allowOverflow ? decimal.intValue() : decimal.intValueExact());
+  
+    if (constructorMap.containsKey("short"))
+      return (Number) constructorMap.get("short").newInstance(allowOverflow ? decimal.shortValue() : decimal.shortValueExact());
+  
+    if (constructorMap.containsKey("byte"))
+      return (Number) constructorMap.get("byte").newInstance(allowOverflow ? decimal.byteValue() : decimal.byteValueExact());
+  
+    if (constructorMap.containsKey("string"))
+      return (Number) constructorMap.get("string").newInstance(decimal.toPlainString());
+    
+    return null;
+  
+  }
+  
+  private Number getFraction(BigDecimal decimal, final Class<? extends Number> newClass)
+          throws InvocationTargetException, IllegalAccessException, InstantiationException
+  {
+    for (Constructor constructor : newClass.getConstructors())
+      if (Modifier.isPublic(constructor.getModifiers()) && constructor.getParameterCount() == 1 && constructor.getParameters()[0].getType().getName().equals("double"))
+        return (Number) constructor.newInstance(decimal.doubleValue());
+    
+    for (Method method : newClass.getDeclaredMethods())
+      if (Modifier.isStatic(method.getModifiers()) && Modifier.isPublic(method.getModifiers()) && method.getReturnType().getSimpleName().equals("Fraction") && method.getParameterCount() == 1 &&
+              method.getParameters()[0].getType().getName().equals("double"))
+        return (Number) method.invoke(null, decimal.doubleValue());
+  
+    return null;
+  }
+  
+  private BigDecimal handleLargeValues(final BigDecimal decimal, BigDecimal min, BigDecimal max)
+  {
+    if (max != null && decimal.compareTo(max) > 0)
     {
-      if (roundDecimals && decimal.scale() > 0)
-        decimal = decimal.setScale(0, BigDecimal.ROUND_HALF_UP);
-      if (newClass == Integer.class)
-        result = useExact ? decimal.intValueExact() : decimal.intValue();
-      else if (newClass == Short.class)
-        result = useExact ? decimal.shortValueExact() : decimal.shortValue();
-      else if (newClass == Long.class)
-        result = useExact ? decimal.longValueExact() : decimal.longValue();
-      else if (newClass == Byte.class)
-        result = useExact ? decimal.byteValueExact() : decimal.byteValue();
-      else
-        throw new ObjectConversionException(n, newClass);
+      if (roundLargeValues)
+        return max;
+      else if (!allowOverflow)
+        throw new ArithmeticException("Large decimal value was larger than Double.MAX_VALUE");
     }
-    return (N) result;
+    else if (min != null && decimal.compareTo(min) < 0)
+    {
+      if (roundLargeValues)
+        return min;
+      else if (!allowOverflow)
+        throw new ArithmeticException("Large decimal value was smaller than Double.MIN_VALUE");
+    }
+    
+    return decimal;
   }
   
   public NumberConverter allowOverflow(final boolean aAllowOverflow)

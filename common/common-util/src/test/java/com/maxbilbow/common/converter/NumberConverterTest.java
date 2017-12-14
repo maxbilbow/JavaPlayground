@@ -1,6 +1,8 @@
 package com.maxbilbow.common.converter;
 
 import com.maxbilbow.common.misc.Chooser;
+import org.apache.commons.lang.mutable.*;
+import org.apache.commons.lang3.math.Fraction;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
@@ -12,6 +14,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class NumberConverterTest
 {
@@ -106,6 +110,7 @@ public class NumberConverterTest
     {
       Assume.assumeNotNull(castTo);
       final Number result = converter.convert(input,castTo);
+      System.out.printf("Converting %s (%s) to %s%n", input, input != null ? input.getClass() : null, castTo);
       doAssert(expected,result);
     }
   
@@ -124,12 +129,14 @@ public class NumberConverterTest
         Assert.assertNull(result);
         return;
       }
-    
       Assert.assertNotNull(result);
     
       Assert.assertSame(result.getClass(), expected.getClass());
     
-      Assert.assertTrue(new BigDecimal(expected.toString()).compareTo(new BigDecimal(result.toString())) == 0);
+      if (expected.getClass().getSimpleName().equals("Fraction"))
+        Assert.assertTrue(Double.compare(expected.doubleValue(),result.doubleValue()) == 0);
+      else
+        Assert.assertTrue(new BigDecimal(expected.toString()).compareTo(new BigDecimal(result.toString())) == 0);
 
 //    Assert.assertEquals(expected, result);
     }
@@ -146,55 +153,55 @@ public class NumberConverterTest
         final short _short = 42;
         final double _double = Double.parseDouble("42.0");
         final float _float = Float.parseFloat("42.0");
-        final BigInteger bigInt = BigInteger.valueOf(42);
-        final BigDecimal bigDecimal = new BigDecimal("42.0");
+        
     
-    
-        for (Object expected :  new Object[]{/*string,*/_int,_long,bigInt,bigDecimal,_double,_float,_short,_byte})
-        {
-//        params.add(new Object[]{string, expected, expected.getClass()});
-          params.add(new Object[]{_int, expected});
-          params.add(new Object[]{_long, expected});
-          params.add(new Object[]{_double, expected});
-          params.add(new Object[]{_float, expected});
-          params.add(new Object[]{_short, expected});
-          params.add(new Object[]{_byte, expected});
-      
-          if (expected.getClass().isPrimitive())
-          {
-            params.add(new Object[]{_int, expected});
-            params.add(new Object[]{_long, expected});
-            params.add(new Object[]{_double, expected});
-            params.add(new Object[]{_float, expected});
-            params.add(new Object[]{_short, expected});
-            params.add(new Object[]{_byte, expected});
-            params.add(new Object[]{null, expected});
-          }
-      
-          params.add(new Object[]{bigInt, expected});
-          params.add(new Object[]{bigDecimal, expected});
-        }
-        //Int max value
-        params.add(new Object[]{new BigInteger(String.valueOf(Integer.MAX_VALUE)), Integer.MAX_VALUE});
-        params.add(new Object[]{Integer.valueOf(Integer.MAX_VALUE).longValue() + 1, Integer.MAX_VALUE}); //TODO: what should this do?
-    
-        //Long max value
-        params.add(new Object[]{new BigInteger(String.valueOf(Long.MAX_VALUE)), Long.MAX_VALUE});
-        params.add(new Object[]{new BigInteger(String.valueOf(Long.MAX_VALUE)).add(new BigInteger("1")), Long.MAX_VALUE}); //TODO: what should this do?
-    
-        //Short MAX value
-        params.add(new Object[]{Long.MAX_VALUE, Short.MAX_VALUE}); //throws error
-    
-        //Byte MAX value
-        params.add(new Object[]{Long.MAX_VALUE, Byte.MAX_VALUE}); //throws error
-    
-        //Double MAX value
-        params.add(new Object[]{BigDecimal.valueOf(Long.MAX_VALUE), Double.valueOf(String.valueOf(Long.MAX_VALUE))});
-    
-        //Float MAX value
-        params.add(new Object[]{BigDecimal.valueOf(Long.MAX_VALUE), Float.valueOf(String.valueOf(Long.MAX_VALUE))});
-    
+        final Number[] numbers = new Number[]{/*string,*/
+                _int,
+                _long,
+                BigInteger.valueOf(42),
+                BigDecimal.valueOf(42.0),
+                _double,
+                _float,
+                _short,
+                _byte,
+                new org.apache.commons.math.fraction.Fraction(42),
+                org.apache.commons.lang.math.Fraction.getFraction(42d),
+                Fraction.getFraction(42d),
+                new AtomicInteger(42),
+                new AtomicLong(42),
+                new MutableByte(42),
+                new MutableShort(42),
+                new MutableInt(42),
+                new MutableLong(42),
+                new MutableFloat(42),
+                new MutableDouble(42)
+        };
+  
+        for (Number expected : numbers)
+          for (Number input : numbers)
+            params.add(new Number[]{input, expected});
       }
+      //Int max value
+      params.add(new Object[]{new BigInteger(String.valueOf(Integer.MAX_VALUE)), Integer.MAX_VALUE});
+      params.add(new Object[]{Integer.valueOf(Integer.MAX_VALUE).longValue() + 1,
+              Integer.MAX_VALUE}); //TODO: what should this do?
+  
+      //Long max value
+      params.add(new Object[]{new BigInteger(String.valueOf(Long.MAX_VALUE)), Long.MAX_VALUE});
+      params.add(new Object[]{new BigInteger(String.valueOf(Long.MAX_VALUE)).add(new BigInteger("1")),
+              Long.MAX_VALUE}); //TODO: what should this do?
+  
+      //Short MAX value
+      params.add(new Object[]{Long.MAX_VALUE, Short.MAX_VALUE}); //throws error
+  
+      //Byte MAX value
+      params.add(new Object[]{Long.MAX_VALUE, Byte.MAX_VALUE}); //throws error
+  
+      //Double MAX value
+      params.add(new Object[]{BigDecimal.valueOf(Long.MAX_VALUE), Double.valueOf(String.valueOf(Long.MAX_VALUE))});
+  
+      //Float MAX value
+      params.add(new Object[]{BigDecimal.valueOf(Long.MAX_VALUE), Float.valueOf(String.valueOf(Long.MAX_VALUE))});
       return params;
     }
     
