@@ -79,7 +79,7 @@ public class NumberConverter implements Converter
     if (StringUtils.isBlank(aStringValue))
       return null;
     
-    return convertNumber(new BigDecimal(aStringValue),aClassType);
+    return convertNumber(toBigDecimal(aStringValue),aClassType);
   }
   
   @SuppressWarnings("unchecked")
@@ -152,27 +152,28 @@ public class NumberConverter implements Converter
   {
     final BigDecimal decimal;
     if (n instanceof BigDecimal)
-    {
       decimal = (BigDecimal) n;
-    }
     else
-    {
-      final String s = n.toString();
-      if (s.indexOf('/') == -1)
-        decimal = new BigDecimal(s);
-      else
-      {
-        final String[] fraction = s.split("/");
-        if (fraction.length != 2)
-          throw new ObjectConversionException(n, newClass);
-        decimal = new BigDecimal(fraction[0]).divide(new BigDecimal(fraction[1]), MathContext.UNLIMITED);
-      }
-    }
+      decimal = toBigDecimal(n.toString());
+    
     
     if (newClass == BigDecimal.class || newClass == BigInteger.class)
       return decimal;
     
     return handleLargeValues(decimal,DecimalUtils.minValue(newClass),DecimalUtils.maxValue(newClass));
+  }
+  
+  public BigDecimal toBigDecimal(final String s)
+  {
+    if (s.indexOf('/') == -1)
+      return new BigDecimal(s);
+    else
+    {
+      final String[] fraction = s.split("/");
+      if (fraction.length != 2)
+        throw new NumberFormatException(s);
+      return new BigDecimal(fraction[0]).divide(new BigDecimal(fraction[1]), MathContext.UNLIMITED);
+    }
   }
   
   private <N extends Number> Number reflectiveGuess(final BigDecimal decimal,
