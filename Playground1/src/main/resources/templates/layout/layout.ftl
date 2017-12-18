@@ -6,16 +6,15 @@
 <head>
     <meta charset="utf-8">
 
-    <link rel="stylesheet" type="text/css" href="${rc.contextPath}/css/lib/bootstrap.css"/>
-    <link rel="stylesheet" type="text/css" href="${rc.contextPath}/css/lib/bootstrap-grid.css"/>
-    <link rel="stylesheet" type="text/css" href="${rc.contextPath}/css/lib/bootstrap-reboot.css"/>
+    <link rel="stylesheet" type="text/css" href="${rc.contextPath}/common-ui?src=/lib/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${rc.contextPath}/common-ui?src=/lib/bootstrap-grid.css"/>
+    <link rel="stylesheet" type="text/css" href="${rc.contextPath}/common-ui?src=/lib/bootstrap-reboot.css"/>
     <link rel="stylesheet" type="text/css" href="${rc.contextPath}/css/custom.css"/>
 
-    <script lang="text/javascript" src="${rc.contextPath}/js/lib/jquery.js"></script>
-    <script lang="text/javascript" src="${rc.contextPath}/js/lib/popper.js"></script>
-    <script lang="text/javascript" src="${rc.contextPath}/js/lib/popper-utils.js"></script>
-    <script lang="text/javascript" src="${rc.contextPath}/js/lib/bootstrap.js"></script>
-    <script lang="text/javascript" src="${rc.contextPath}/js/custom.js"></script>
+    <script lang="text/javascript" src="${rc.contextPath}/common-ui?src=js/lib/jquery.js"></script>
+    <script lang="text/javascript" src="${rc.contextPath}/common-ui?src=js/lib/popper.js"></script>
+    <script lang="text/javascript" src="${rc.contextPath}/common-ui?src=js/lib/popper-utils.js"></script>
+    <script lang="text/javascript" src="${rc.contextPath}/common-ui?src=js/lib/bootstrap.js"></script>
 <#--End additional scripts-->
 
 

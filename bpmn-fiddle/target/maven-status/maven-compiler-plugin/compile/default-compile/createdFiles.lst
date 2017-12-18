@@ -1,0 +1,9 @@
+uk\co\utilisoft\bpmn\fiddle\framework\FDLTools.class
+uk\co\utilisoft\bpmn\fiddle\web\MainController.class
+uk\co\utilisoft\bpmn\fiddle\BpmnFiddleApplication.class
+uk\co\utilisoft\bpmn\fiddle\config\FDLConstants.class
+uk\co\utilisoft\bpmn\fiddle\util\BrowserUtil.class
+uk\co\utilisoft\bpmn\fiddle\framework\FileRenumberer.class
+uk\co\utilisoft\bpmn\fiddle\framework\IdMapper.class
+uk\co\utilisoft\bpmn\fiddle\util\OSUtil.class
+uk\co\utilisoft\bpmn\fiddle\framework\Renumberer.class

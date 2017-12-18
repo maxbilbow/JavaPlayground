@@ -1,0 +1,2510 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="MRV" name="Meter read validation process map." isExecutable="true">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <serviceTask id="_003" name="Are valid set values valid? MRV_003" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Check the settlement class is 2, 3 or 4
+	Else return false.
+
+If converter is fitted, check
+	Converter through zeros count is not null
+	Converter un-corrected read is not null
+       Corrector Uncorrected Reading is populated with the same value as the Meter Reading
+	Converter corrected read is not null
+	Converter read factor is not null
+	Converter correction factor is not null
+	Converter number of dials is not null
+Else return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvCheckValidSetValues</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_008" name="Is replacement read? MRV_008" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>If Read Type equals 'R'
+	Return true
+Else
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsReplacementRead</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_011" name="Does read to be replaced exist. MRV_011" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>If mprn, meter serial number, read date is null
+	Return false.
+
+Get all reads where the mprn, serial number, read date match and inustry status equals INDUSTRY_VALID or NOT_ISSUED.
+
+If no reads are returned
+	Return false.
+
+Else 
+	Return true.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvReadToBeReplacedExists</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_014" name="Suppress outbound industry flow and raise alert MRV_014" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvRejectAndContinue</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_015" name="Is replacement read less than subsequent reads? MRV_015" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Get all subsequent reads by mprn, meter serial number and industry status in ('INDUSTRY_VALID', 'PENDING', 'REPLACED', 'ISSUED') and read date greater than current read date.
+
+If no reads are returned
+	Return true.
+
+If each read is greater than the current read value
+	Return true.
+Else
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsReplacementReadLessThanSubsequent</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_018" name="Suppress outbound industry flow and raise alert MRV_018" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvRejectAndContinue</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_019" name="Update read to be replaced MRV_019" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Update all reads that match mprn, serial number, read date and industry status equals 'INDUSTRY_VALID' or 'NOT_ISSUED'
+
+Set industry status to REPLACED.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvUpdateReadToBeReplaced</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_039" name="Is opening or initial read? MRV_039" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>If read type equals 'R' and it's replacing an opening read.
+	Return true.
+
+If read type equals 'O'.
+	Return true.
+
+If read reason equals 'OPNT'.
+	Return true.
+
+Else 
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsOpeningOrInitialReading</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_035" name="Check read already exists? MRV_035" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>If MPRN, serial number, or read date is null.
+	Return true.
+
+If the read type equal 'R'
+	Return false.
+
+Get all reads that match MPRN, meter serial number, read date and the statuses are in ('INDUSTRY_VALID', 'ISSUED', 'PENDING')
+
+If reads exist
+	Return true.
+Else
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvReadAlreadyExists</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow4" name="True" sourceRef="_003" targetRef="_005">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("ARE_INITIAL_VALUES_VALID")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow5" name="True" sourceRef="_008" targetRef="_009">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_REPLACEMENT_READ")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow6" name="False" sourceRef="_011" targetRef="_012">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("DOES_READ_TO_REPLACE_EXIST")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow7" name="True" sourceRef="_011" targetRef="_015">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("DOES_READ_TO_REPLACE_EXIST")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow8" name="False" sourceRef="_015" targetRef="_016">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_REPLACEMENT_READ_LESS_THAN_SUBSEQUENT_READS")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow9" name="True" sourceRef="_015" targetRef="_019">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_REPLACEMENT_READ_LESS_THAN_SUBSEQUENT_READS")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_037" name="Is read less than 25 business days? MRV_037" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Get system parameter PROCESS_MAX_BUSINESS_DAYS. (Default is 25 days.)
+
+If read type equals 'R'
+	Return TRUE.
+
+If current read date is greater than PROCESS_MAX_BUSINESS_DAYS value old
+	Return FALSE.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsReadDateLessThanMaxBusinessDays</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_036" name="Suppress outbound industry flow and raise alert MRV_036" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvRejectAndContinue</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_038" name="Suppress outbound industry flow and raise alert MRV_038" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvRejectAndContinue</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_045" name="Check last accepted read present MRV_045" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Get all reads for mprn, meter serial number, read date and where mrv status not equal new.
+
+If no reads are found
+	Return false.
+
+For each read, 
+If
+	Industry status equals 'INDUSTRY_VALID' or
+	Settlement class equals 3 and industry status equals 'PENDING' or
+	MRV status equals 'MRV_RECORDED' and industry status not equal 'REPLACED'
+	Return True.
+Else if
+	Industry status equals 'ISSUED'
+	Return false.
+
+Else
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvCheckLastAcceptedReads</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_046" name="Hold and Alert MRV_046" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Place the transaction on hold and raise an alert detailing the reasons.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>Hold</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_048" name="Check mandatory fields are present? MRV_048" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>If a converter is fitted check;
+	Last accepted converter corrected read value equals null.
+	Last accepted converter un-corrected read value equals null.
+	Return false
+Else
+	Check last accepted read date equals null.
+	Last accepted read value equals null.
+	Imperial asset indicator equals null.
+	Return false.
+
+If imperial asset indicator equals 'N'
+	Set value to
+Else if imperial asset indicator equals 'Y'
+	Set value to 
+
+If read factor equals zero,
+	Return false.
+
+If rolling AQ equals null,
+	Return false.
+
+If settlement class equals 2 and SOQ equals null,
+	Return false.
+
+Get tolerance for rolling AQ and settlement class,
+If tolerance equals null.
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvCheckMandatoryFields</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_049" name="Suppress outbound industry flow and raise alert MRV_049" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvRejectAndContinue</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_050" name="Calculate Energy MRV_050" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>If a converter is fitted, calculate the converter volume,
+	If the converter clock count equals zero,
+		Converter valume  = current converter corrected read - last accepted converter corrected read.
+	Else
+		Converter volume = (10 ^ number of dials) - (last accepted converter corrected read + current converter corrected read).
+
+Calculate the converter energy,
+	Converter Energy = (converter volume X converter correction factor X converter read factor X imperial asset indicator X cv value) / conversion factor.
+
+Calculate the meter volume,
+	If the meter clock count equals zero,
+		Meter volume = current meter read value - last accepted meter read value.
+	Else
+		Meter volume = (10 ^ number of dials) - (last accepted read value + current meter read value).
+
+Meter Energy = meter volume X correction factor X read factor X imperial asset indicator X cv value) / conversion factor.
+	
+Calculate days between reads.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvCalculateEnergy</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_051" name="Calculate Tolerances MRV_051" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Get the upper tolerance percent and override tolerance percent using the rolling AQ and the settlement class.
+
+if settlement class 2
+	Upper tolerance = SOQ X Upper tolerance percent.
+	Override Tolerance = SOQ X Override tolerance percent.
+
+Else if settlement class 3 or 4
+	Upper tolerance = Rolling AQ / 365 X Number of days between reads X Upper tolerance percent.
+	Override Tolerance = SOQ X Override tolerance percent.
+
+Lower tolerance is zero.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvCalculateTolerances</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_052" name="Is Stage One Valid? MRV_052" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>If Meter energy is less than zero
+	Set MRV status to MRV_INVALID_STAGE_1.
+
+Else if meter energy greater than or equal to zero and lesss than or equal to upper tolerance
+	Set MRV status to MRV_VALID_STAGE_1.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsMeterReadStageOneValid</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_053" name="Is Stage Two Valid? MRV_053" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>If meter energy greater than or equal to upper tolerance and less than or equal to override tolerance
+	Set override flag to 'Y'
+	Set MRV status to MRV_VALID_STAGE_2
+
+Else if meter energy greater than override tolerance
+	Set MRV status to MRV_INVALID_STAGE_2.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsMeterReadStageTwoValid</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_054" name="Suppress outbound industry flow and raise alert MRV_054" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvRejectAndContinue</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow15" name="False" sourceRef="_035" targetRef="_037">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("DOES_READ_ALREADY_EXISTS")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow18" name="True" sourceRef="_037" targetRef="_039">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_READ_LESS_THAN_25_BUSINESS_DAYS")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow19" name="False" sourceRef="_045" targetRef="_046">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_LAST_ACCEPTED_READS_PRESENT")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow20" name="True" sourceRef="_045" targetRef="_047">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_LAST_ACCEPTED_READS_PRESENT")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow22" sourceRef="_047" targetRef="_048"></sequenceFlow>
+    <sequenceFlow id="flow23" name="False" sourceRef="_048" targetRef="_049">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("ARE_MANDATORY_FIELDS_PRESENT")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow24" name="True" sourceRef="_048" targetRef="_050">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("ARE_MANDATORY_FIELDS_PRESENT")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow25" sourceRef="_050" targetRef="_051"></sequenceFlow>
+    <sequenceFlow id="flow26" sourceRef="_051" targetRef="_052"></sequenceFlow>
+    <sequenceFlow id="flow27" name="False" sourceRef="_052" targetRef="_053">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_READ_STAGE_ONE_VALID")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_055" name="Is Stage Two Parameter Active? MRV_055" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Get system parameter STAGE_TWO_VALID_HELD.
+
+If STAGE_TWO_VALID_HELD equals true
+	Return true.
+Else
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsStageTwoValidationParamActive</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_057" name="Suppress outbound industry flow and raise alert MRV_057" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvRejectAndContinue</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_059" name="Is Converter fitted? MRV_059" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>If a converter is fitted,
+	Return true.
+Else
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsAConverterFitted</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_060" name="Is Converter Ratio Valid? MRV_060" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Get converter ratio from the MRV_CONVERTER_RATIO table by matching on settlement class.
+
+If converter volume, meter volum or correction factor equals zero
+	Return false.
+
+Calculate converter ratio,
+	Calculated converter ratio = converter volume / meter volume / correction factor.
+
+If Calculated converter ratio greater than or equal to converter lower ration and less than or equal to upper ratio,
+	Return true.
+Else
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvCalculateConverterRatio</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_061" name="Suppress outbound industry flow and raise alert MRV_061" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvRejectAndContinue</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_020" name="Is Check Read? MRV_020" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Get system paremeter CHECK_READ_CODE. (Default is 'O15')
+
+If transaction type received equals CHECK_READ_CODE,
+	Return true.
+Else
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsCheckRead</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_026" name="Store Data MRV_026" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Store all read data available. 
+
+If there is any calculated validation status such as VALID_STAGE_1, VALID_STAGE_2, MRV_BYPASSED etc. then set the MRV_STATUS to it, otherwise set it to MRV_VALIDATION_OFF.
+
+Set the industry status to ISSUED.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvStoreDataCalculatedIssued</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_027" name="Issue SFN MRV_027" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Creates a SFN task to do.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvCreateSfnTaskToDo</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow30" name="True" sourceRef="_053" targetRef="_055">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_READ_STAGE_TWO_VALID")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow31" name="True" sourceRef="_055" targetRef="_056">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_STAGE_TWO_VALID_PARAMETER_ACTIVE")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow32" name="False" sourceRef="_055" targetRef="_059">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_STAGE_TWO_VALID_PARAMETER_ACTIVE")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow33" name="True" sourceRef="_059" targetRef="_060">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_A_CONVERTER_FITTED")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow34" name="False" sourceRef="_060" targetRef="_061">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_CONVERTER_RATIO_VALID")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow36" name="False" sourceRef="_059" targetRef="_062">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_A_CONVERTER_FITTED")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_062" name="Is Settlement class 3? MRV_062" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>If settlement class equals 3,
+	Return true.
+Else
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsSettlementClass3</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_063" name="Is Opening Read or Replacement Read MRV_063" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>If read reason equals 'OPNT' or read type equals 'O'
+	Return true.
+
+Else if read type equals 'R'
+	Return true.
+
+Else
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsOpeningOrReplacementRead</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_064" name="Set previous pending reads as Issued MRV_064" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Get all pending reads by MPRN, serial number and industry status equals 'PENDING'.
+
+Update each read, set industry status to ISSUED.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvMarkPreviousPendingReadsAsIssued</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_065" name="Store Data MRV_065" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Store all read data available.
+
+If there is any calculated validation status such as VALID_STAGE_1, VALID_STAGE_2, MRV_BYPASSED etc. then set the MRV_STATUS to it, otherwise set it to MRV_VALIDATION_OFF.
+
+Set the industry status to ISSUED.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvStoreDataCalculatedIssued</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_066" name="Issue UBR MRV_066" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Creates a UBR task to do.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvCreateUbrTaskToDo</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow40" name="False" sourceRef="_020" targetRef="_028">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_CHECK_READ")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow41" name="True" sourceRef="_062" targetRef="_063">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_SETTLEMENT_CLASS_3")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow42" name="True" sourceRef="_063" targetRef="_064">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_OPENING_OR_REPLACEMENT_READ")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow43" sourceRef="_064" targetRef="_065"></sequenceFlow>
+    <serviceTask id="_067" name="Does batch frequency match last pending? MRV_067" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Get the last pending read by MPRN, serial number and industry status equals 'PENDING'.
+
+If batch read frequency equal last pending read batch frequency,
+	Return true.
+
+Else
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvDoesBatchReadFrequencyMatchLastPendingRead</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_068" name="Set all pending as Issued. MRV_068" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Get all pending reads by MPRN, serial number and industry status equals 'PENDING'.
+
+Update each read, set industry status to ISSUED.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvMarkPreviousPendingReadsAsIssued</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_069" name="Store Data MRV_069" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Store all read data available.
+
+If there is any calculated validation status such as VALID_STAGE_1, VALID_STAGE_2, MRV_BYPASSED etc. then set the MRV_STATUS to it, otherwise set it to MRV_VALIDATION_OFF.
+
+Set the industry status to ISSUED.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvStoreDataCalculatedIssued</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_070" name="Issue UBR MRV_070" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Creates a UBR task to do.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvCreateUbrTaskToDo</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow46" name="False" sourceRef="_063" targetRef="_067">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_OPENING_OR_REPLACEMENT_READ")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow47" name="False" sourceRef="_067" targetRef="_068">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("DOES_THE_BATCH_READ_FREQUENCY_MATCH_THE_LAST_PENDING")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow48" sourceRef="_068" targetRef="_069"></sequenceFlow>
+    <serviceTask id="_071" name="Store Data MRV_071" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Store all read data available.
+
+Set mrv_status to MRV_RECORDED.
+
+Set the industry_status to PENDING.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvStoreDataPending</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_072" name="Do issued reads exist after read date? MRV_072" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Get all reads by MPRN, serial number and where current read date is less than read date.
+
+If any reads exist,
+	Return true.
+
+Else
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvDoIssuedReadsExistAfterReadDate</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_073" name="Store Data MRV_073" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Store all read data available</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvMarkAsIssued</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_074" name="Issue UBR MRV_074" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Creates a UBR task to do.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvCreateUbrTaskToDo</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_075" name="Batch frequency hit? MRV_075" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Get all reads that have a industry status of 'PENDING' that match on MPRN, serial number.
+
+If number of reads returned equals batch read frequency,
+	Return true.
+
+Else,
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvDoesPendingCountMatchBatchFrequency</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow51" name="True" sourceRef="_067" targetRef="_071">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("DOES_THE_BATCH_READ_FREQUENCY_MATCH_THE_LAST_PENDING")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow52" sourceRef="_071" targetRef="_072"></sequenceFlow>
+    <sequenceFlow id="flow53" name="True" sourceRef="_072" targetRef="_073">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("DO_ISSUED_READS_EXIST_AFTER_THIS_READ_DATE")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_076" name="Store Data MRV_076" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Store all read data available</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvMarkBatchAsIssued</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_077" name="Issue UBR MRV_077" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Creates a UBR task to do.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvCreateUbrTaskToDo</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow56" name="False" sourceRef="_072" targetRef="_075">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("DO_ISSUED_READS_EXIST_AFTER_THIS_READ_DATE")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow57" name="True" sourceRef="_075" targetRef="_076">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_BATCH_READ_FREQUENCY_HIT")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_079" name="Are there any reads in Pending? MRV_079" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Check to see if the are any pending reads for the MPRN and serial number.
+
+If any reads are returned,
+	Return true.
+
+Else,
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvDoPendingReadsExist</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_080" name="Mark them as Issued. MRV_080" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Get all pending reads by MPRN, serial number and industry status equals 'PENDING'.
+
+Update each read, set industry status to ISSUED.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvMarkPendingReadsAsIssued</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_081" name="Issue UBR MRV_081" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Creates a UBR task to do.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvCreateUbrTaskToDo</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow61" name="False" sourceRef="_062" targetRef="_079">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_SETTLEMENT_CLASS_3")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow62" name="True" sourceRef="_079" targetRef="_080">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("ARE_THERE_ANY_READS_IN_PENDING_FOR_THIS_MTPNT_AND_SERIAL_NUMBER")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_082" name="Is settlement class two? MRV_082" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>If settlement class equals 2,
+	Return true.
+Else
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsSettlementClass2</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow65" name="False" sourceRef="_079" targetRef="_082">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("ARE_THERE_ANY_READS_IN_PENDING_FOR_THIS_MTPNT_AND_SERIAL_NUMBER")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow66" sourceRef="_081" targetRef="_082"></sequenceFlow>
+    <serviceTask id="_083" name="Store Data MRV_083" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Store all read data available.
+
+If there is any calculated validation status such as VALID_STAGE_1, VALID_STAGE_2, MRV_BYPASSED etc. then set the MRV_STATUS to it, otherwise set it to MRV_VALIDATION_OFF.
+
+Set the industry status to ISSUED.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvStoreDataCalculatedIssued</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_084" name="Issue UDR MRV_084" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Creates a UDR task to do.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvCreateUdrTaskToDo</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_085" name="Is Validation On? MRV_085" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>This checks to see if MRV validation is switched on by looking at the configured MRV System Parameter.
+
+Is READ_VALIDATION_ON = True</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsReadValidationOn</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_088" name="Passes Periodic Validation? MRV_088" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>If there is no last accepted  not recordOnly read
+then return true.
+ 
+If read reason equals 'OPNT' or read type equals 'O,
+	Return true.
+
+Else if read type equals 'R',
+	Return true.
+
+If last accepted  not recordOnly read is found then get the periodic validation row where the rolling AQ is greater than or equal to the lower range and less than or equal to the upper range.  This looks at the MRV_PERIODIC_VALIDATION table.
+
+If number of days between the reads &lt; the periodic validation frequency,
+	Return false.
+Else,
+	Return true.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvPeriodicValidation</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_089" name="Suppress outbound industry flow and raise alert MRV_089" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvRejectAndContinue</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_086" name="Store Data MRV_086" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Store all read data available.
+
+If there is any calculated validation status such as VALID_STAGE_1, VALID_STAGE_2, MRV_BYPASSED etc. then set the MRV_STATUS to it, otherwise set it to MRV_VALIDATION_OFF.
+
+Set the industry status to ISSUED.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvStoreDataCalculatedIssued</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_087" name="Issue UMR MRV_087" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Creates a UMR task to do.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvCreateUmrTaskToDo</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow67" name="True" sourceRef="_082" targetRef="_083">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_SETTLEMENT_CLASS_2")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow68" sourceRef="_083" targetRef="_084"></sequenceFlow>
+    <sequenceFlow id="flow70" name="False" sourceRef="_082" targetRef="_085">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_SETTLEMENT_CLASS_2")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow71" name="False" sourceRef="_085" targetRef="_086">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_MRV_VALIDATION_ON")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow74" name="True" sourceRef="_085" targetRef="_088">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_MRV_VALIDATION_ON")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_002" name="Is Validation on? MRV_002" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>This checks to see if MRV validation is switched on by looking at the configured MRV System Parameter.
+
+Is READ_VALIDATION_ON = True</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsReadValidationOn</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow79" sourceRef="startevent1" targetRef="_001"></sequenceFlow>
+    <sequenceFlow id="flow80" name="True" sourceRef="_002" targetRef="_003">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_MRV_VALIDATION_ON")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow81" name="False" sourceRef="_002" targetRef="_007">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_MRV_VALIDATION_ON")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow84" name="False" sourceRef="_039" targetRef="_045">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_OPENING_OR_INITIAL_READ")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow91" name="True" sourceRef="_060" targetRef="_062">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_CONVERTER_RATIO_VALID")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_004" name="Suppress outbound industry flow and raise alert MRV_004" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvRejectAndContinue</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow93" name="True" sourceRef="_052" targetRef="_059">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_READ_STAGE_ONE_VALID")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow94" name="True" sourceRef="_088" targetRef="_086">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_PASSES_PERIODIC_VALIDATION")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_005" name="Is Record Only File Type? MRV_005" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Checks to see if the record type is a record only file type.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsReadTypeRecordOnly</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow95" name="False" sourceRef="_008" targetRef="_020">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_REPLACEMENT_READ")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow96" name="False" sourceRef="_005" targetRef="_008">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_READ_TYPE_RECORD_ONLY")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_006" name="Store Data MRV_006" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Creates the Meter Read record setting the industry status to 'INDUSTRY_VALID' and the MRV status to 'MRV_RECORDED'.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvStoreDataRecordOnly</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow97" name="True" sourceRef="_005" targetRef="_006">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_READ_TYPE_RECORD_ONLY")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_078" name="Success MRV_078" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Continue to process transaction on main process map.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvSuccessAfterActivitiDecisionBox</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow98" name="False" sourceRef="_075" targetRef="_078">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_BATCH_READ_FREQUENCY_HIT")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow99" name="True" sourceRef="_035" targetRef="_036">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("DOES_READ_ALREADY_EXISTS")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow100" name="False" sourceRef="_037" targetRef="_038">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_READ_LESS_THAN_25_BUSINESS_DAYS")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow101" name="False" sourceRef="_088" targetRef="_089">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_PASSES_PERIODIC_VALIDATION")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow102" name="False" sourceRef="_053" targetRef="_054">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_READ_STAGE_TWO_VALID")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow103" name="False" sourceRef="_003" targetRef="_004">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("ARE_INITIAL_VALUES_VALID")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow104" sourceRef="_019" targetRef="_020"></sequenceFlow>
+    <serviceTask id="_040" name="Is opening read date within SSD tolerances?    MRV_040" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>If current read date is within the period (supply start date - n days &amp; supply start date + n days)
+	Return TRUE
+Else
+	Return FALSE.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsOpeningReadDateWithinSSDTolerance</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow105" name="True" sourceRef="_039" targetRef="_040">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_OPENING_OR_INITIAL_READ")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_041" name="Suppress outbound industry flow and raise alert MRV_041" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvRejectAndContinue</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow106" name="False" sourceRef="_040" targetRef="_041">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_OPENING_READ_DATE_WITHIN_TOLERANCES")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow107" name="True" sourceRef="_040" targetRef="_042">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_OPENING_READ_DATE_WITHIN_TOLERANCES")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_022" name="Store Data MRV_022" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Creates the Meter Read record setting the industry status to 'INDUSTRY_VALID' and the MRV status to 'MRV_RECORDED'.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvStoreDataRecordOnly</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_021" name="Is settlement class two? MRV_021" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>If Settlement class equals 2,
+	Return true.
+Else
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsSettlementClass2</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow108" name="True" sourceRef="_021" targetRef="_022">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_SETTLEMENT_CLASS_2")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow109" name="False" sourceRef="_021" targetRef="_026">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_SETTLEMENT_CLASS_2")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow110" name="True" sourceRef="_020" targetRef="_021">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_CHECK_READ")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_047" name="CV Lookup successful? MRV_047" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Lookup calorific values from MRV_CALORIFIC_VALUE table where 
+	K0260 is greater than or equal to the last accepted read date and
+	K0260 is less than or equal to the current read date and
+	K1052 equals the LDZ.
+
+If calorific values are returned. 
+	Calculate the average calorific value.
+
+Else
+	Lookup the static calorific value for the current LDZ.  This looks at the MRV_STATIC_CAL_VALUE table.
+
+If no static value is found,
+	Return the default. (Default is 39.0)</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvLookupCv</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_028" name="Is ONJOB or ONUPD? MRV_028" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Check whether the read was generated by an ONJOB/ONUPD?
+
+If it was generated by an ONJOB/ONUPD then proceed to further ONJOB/ONUPD checking.
+
+If it was not generated by an ONJOB/ONUPD then proceed to check whether the read is an opening or intial read.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrv_isOnjob</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow119" name="FALSE" sourceRef="_028" targetRef="_033">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_ONJOB") && !BPMN_TOKEN.getNonPersistentVar("IS_ONUPD")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_029" name="Is Install, Reposition or Removal? MRV_029" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Check if the read was from an ONUPD
+
+If it was proceed to store data
+
+If it was not then proceed to check the current read reason.
+
+If it is "OPNN" or "OPNX" the read is from a meter being installed.
+
+If it is "FINC" or "FINX" the read is from a meter being removed.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrv_isOnjobInstallOrRemoval</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow120" name="TRUE" sourceRef="_028" targetRef="_029">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_ONJOB") || BPMN_TOKEN.getNonPersistentVar("IS_ONUPD")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow121" name="REMOVAL, REPOSITION" sourceRef="_029" targetRef="_030">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("ONJOB_JOB_TYPE") == "REMOVAL"}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_032" name="Store Data MRV MRV_032" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Creates the Meter Read record and Meter Read Data record setting the industry status to 'ONJOB_VALID' and the MRV status to 'MRV_RECORDED'.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvStoreDataOnjob</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_030" name="Are Read Date and Read Value &gt; Last Accepted Read Date and Read Value? MRV_030" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Check whether there is a last accepted read 
+
+If no last accepted read exists, then proceed to store data.
+
+If there is a last accepted read, check whether the read date and read value on the ONJOB read are greater than the values of the last accepted read.
+
+If either of these values is lower than those on the last accepted read, proceed to place the transaction on hold.
+
+Otherwise proceed to store the data.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrv_isOnjobReadValid</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow124" name="INSTALL, REPRT, REFSH, APPNT, UPDTE" sourceRef="_029" targetRef="_032">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("ONJOB_JOB_TYPE") == "INSTALL"}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_031" name="Hold and Alert MRV_031" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Place the transaction on hold and raise an alert detailing the reasons.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvRejectAndContinue</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow128" name="FALSE" sourceRef="_030" targetRef="_031">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("ONJOB_READ_VALID")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow130" name="TRUE" sourceRef="_030" targetRef="_032">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("ONJOB_READ_VALID")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_009" name="Does CHECK Read Already Exist? MRV_009" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Check whether a CHECK read exists for this date, serial number, industry status of ISSUED and transaction type of SFN_O15.
+
+If a CHECK read exists place the transaction on hold.
+
+If no CHECK read exists, proceed to check for the read to be replaced.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvDoAnyCheckReadsExistOnReadDate</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_010" name="Suppress outbound industry flow and raise alert MRV_010" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvRejectAndContinue</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow131" name="False" sourceRef="_009" targetRef="_011">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("CHECK_READ_EXISTS_ON_READ_DATE")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow132" name="True" sourceRef="_009" targetRef="_010">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("CHECK_READ_EXISTS_ON_READ_DATE")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow133" sourceRef="_086" targetRef="_087"></sequenceFlow>
+    <sequenceFlow id="flow134" sourceRef="_080" targetRef="_081"></sequenceFlow>
+    <sequenceFlow id="flow135" sourceRef="_065" targetRef="_066"></sequenceFlow>
+    <sequenceFlow id="flow136" sourceRef="_069" targetRef="_070"></sequenceFlow>
+    <sequenceFlow id="flow137" sourceRef="_026" targetRef="_027"></sequenceFlow>
+    <sequenceFlow id="flow138" sourceRef="_073" targetRef="_074"></sequenceFlow>
+    <sequenceFlow id="flow139" sourceRef="_076" targetRef="_077"></sequenceFlow>
+    <serviceTask id="_007" name="Is Record Only File Type? MRV_007" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Checks to see if the record type is a record only file type.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsReadTypeRecordOnly</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow141" name="True" sourceRef="_007" targetRef="_006">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_READ_TYPE_RECORD_ONLY")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow142" name="False" sourceRef="_007" targetRef="_023">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_READ_TYPE_RECORD_ONLY")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_023" name="Is Check Read? MRV_023" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Get system paremeter CHECK_READ_CODE. (Default is 'O15')
+
+If transaction type received equals CHECK_READ_CODE,
+	Return true.
+Else
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsCheckRead</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow147" name="False" sourceRef="_023" targetRef="_024">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_CHECK_READ")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow150" name="True" sourceRef="_023" targetRef="_021">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_CHECK_READ")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_033" name="If SED is populated is read date within tolerance? MRV_033" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Check if the Supply Period ETD is populated.
+
+If it is and the read is a closing read, then check whether the read date is within the tolerance.
+
+If the read date is within the tolerance, move on.
+
+If the read date is not within the tolerance, place the transaction on hold and raise an alert.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsSEDWithinTolerance</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_034" name="Suppress outbound industry flow and raise alert MRV_034" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+    </serviceTask>
+    <sequenceFlow id="flow151" name="True" sourceRef="_033" targetRef="_035">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("SED_EITHER_NULL_OR_VALID")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow152" name="False" sourceRef="_033" targetRef="_034">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("SED_EITHER_NULL_OR_VALID")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_042" name="Is read submission date within SSD tolerances? MRV_042" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Using the READ_SUBMISSION_DATE stored on the token, determine whether this is within the SSD tolerances.
+
+If it is move on.
+
+If it is not, place the transaction on hold and raise an alert.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvIsReadSubmissionDateWithinTolerance</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_044" name="Check last accepted read present MRV_044" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Get all reads for mprn, meter serial number, read date and where mrv status not equal new.
+
+If no reads are found
+	Return false.
+
+For each read, 
+If
+	Industry status equals 'INDUSTRY_VALID' or
+	Settlement class equals 3 and industry status equals 'PENDING' or
+	MRV status equals 'MRV_RECORDED' and industry status not equal 'REPLACED'
+	Return True.
+Else if
+	Industry status equals 'ISSUED'
+	Return false.
+
+Else
+	Return false.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrvCheckLastAcceptedReads</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow153" name="True" sourceRef="_042" targetRef="_044">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("READ_SUBMISSION_DATE_VALID")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_043" name="Suppress outbound industry flow and raise alert MRV_043" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvRejectAndContinue</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow154" name="False" sourceRef="_042" targetRef="_043">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("READ_SUBMISSION_DATE_VALID")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow155" name="True" sourceRef="_044" targetRef="_047">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_LAST_ACCEPTED_READS_PRESENT")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow156" name="False" sourceRef="_044" targetRef="_062">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_LAST_ACCEPTED_READS_PRESENT")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_001" name="Determine read submission date MRV_001" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Get the Supply Period EFD and Todays date, and determine which of these is the latter.
+
+Store this date on the token in READ_SUBMISSION_DATE to be used in later map nodes.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvDetermineReadSubmissionDate</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow157" sourceRef="_001" targetRef="_002"></sequenceFlow>
+    <serviceTask id="_024" name="Is ONJOB or ONUPD? MRV_024" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Check whether the read was generated by an ONJOB/ONUPD?
+
+If it was generated by an ONJOB/ONUPD then store the data
+
+If it was not proceed to further MRV checks</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>mrv_isOnjob</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_025" name="Store Data MRV MRV_025" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Creates the Meter Read record and Meter Read Data record setting the industry status to 'ONJOB_VALID' and the MRV status to 'MRV_RECORDED'.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>mrvStoreDataOnjob</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow158" name="False" sourceRef="_024" targetRef="_062">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_ONJOB") && !BPMN_TOKEN.getNonPersistentVar("IS_ONUPD")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow159" name="True" sourceRef="_024" targetRef="_025">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_ONJOB") || BPMN_TOKEN.getNonPersistentVar("IS_ONUPD")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_056" name="Is MRV Configured to hold at this point? MRV_056" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Check for value of system parameter HOLD_ON_IS_STAGE_TWO_PARAMETER_ACTIVE
+
+If set to TRUE move to hold ann raise an appropriate alert
+
+If set to FALSE move to suppress outbound industry flow and raise an appropriate alert.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>stage2ParamIsMrvConfiguredToHold</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow160" name="False" sourceRef="_056" targetRef="_057">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("HOLD_AT_STAGE_2_PARAM_ACTIVE")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_058" name="Hold and Alert MRV_058" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Place the transaction on hold and raise an alert detailing the reasons.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>Hold</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow161" name="True" sourceRef="_056" targetRef="_058">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("HOLD_AT_STAGE_2_PARAM_ACTIVE")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_013" name="Hold and Alert MRV_013" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Place the transaction on hold and raise an alert detailing the reasons.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>Hold</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_012" name="Is MRV Configured to hold at this point? MRV_012" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Check for value of system parameter HOLD_ON_IS_READ_TO_BE_REPLACED_EXISTS
+
+If set to TRUE move to hold ann raise an appropriate alert
+
+If set to FALSE move to suppress outbound industry flow and raise an appropriate alert.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>doesReadToBeReplacedExistIsMrvConfiguredToHold</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow162" name="False" sourceRef="_012" targetRef="_014">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("HOLD_AT_CHECK_READ_TO_BE_REPLACED_EXISTS")}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow163" name="True" sourceRef="_012" targetRef="_013">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("HOLD_AT_CHECK_READ_TO_BE_REPLACED_EXISTS")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_016" name="Is MRV Configured to hold at this point? MRV_016" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation>Check for value of system parameter HOLD_ON_IS_REPLACEMENT_READ_LESS_THAN_SUBSEQUENT
+
+If set to TRUE move to hold ann raise an appropriate alert
+
+If set to FALSE move to suppress outbound industry flow and raise an appropriate alert.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="decisionTaskBean">
+          <activiti:string>isReplacementLessThanSubsequentIsMrvConfiguredToHold</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow164" name="False" sourceRef="_016" targetRef="_018">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("HOLD_AT_CHECK_REPLACEMENT_READ_LESS_THAN_SUBSEQUENT")}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_017" name="Hold and Alert MRV_017" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation>Place the transaction on hold and raise an alert detailing the reasons.</documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string>BEAN_NAME</activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string>Hold</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow165" name="True" sourceRef="_016" targetRef="_017">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("HOLD_AT_CHECK_REPLACEMENT_READ_LESS_THAN_SUBSEQUENT")}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_MRV">
+    <bpmndi:BPMNPlane bpmnElement="MRV" id="BPMNPlane_MRV">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="276.0" y="671.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_003" id="BPMNShape__003">
+        <omgdc:Bounds height="71.0" width="105.0" x="696.0" y="653.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_008" id="BPMNShape__008">
+        <omgdc:Bounds height="71.0" width="105.0" x="1061.0" y="653.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_011" id="BPMNShape__011">
+        <omgdc:Bounds height="77.0" width="105.0" x="1221.0" y="786.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_014" id="BPMNShape__014">
+        <omgdc:Bounds height="71.0" width="105.0" x="1221.0" y="1027.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_015" id="BPMNShape__015">
+        <omgdc:Bounds height="96.0" width="105.0" x="1400.0" y="777.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_018" id="BPMNShape__018">
+        <omgdc:Bounds height="71.0" width="105.0" x="1400.0" y="1027.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_019" id="BPMNShape__019">
+        <omgdc:Bounds height="81.0" width="105.0" x="1570.0" y="784.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_039" id="BPMNShape__039">
+        <omgdc:Bounds height="71.0" width="105.0" x="2571.0" y="653.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_035" id="BPMNShape__035">
+        <omgdc:Bounds height="71.0" width="105.0" x="2240.0" y="653.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_037" id="BPMNShape__037">
+        <omgdc:Bounds height="71.0" width="105.0" x="2410.0" y="653.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_036" id="BPMNShape__036">
+        <omgdc:Bounds height="73.0" width="105.0" x="2240.0" y="788.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_038" id="BPMNShape__038">
+        <omgdc:Bounds height="73.0" width="105.0" x="2410.0" y="788.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_045" id="BPMNShape__045">
+        <omgdc:Bounds height="70.0" width="105.0" x="2741.0" y="653.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_046" id="BPMNShape__046">
+        <omgdc:Bounds height="88.0" width="105.0" x="2741.0" y="781.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_048" id="BPMNShape__048">
+        <omgdc:Bounds height="72.0" width="105.0" x="3060.0" y="652.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_049" id="BPMNShape__049">
+        <omgdc:Bounds height="71.0" width="105.0" x="3060.0" y="789.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_050" id="BPMNShape__050">
+        <omgdc:Bounds height="72.0" width="105.0" x="3221.0" y="652.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_051" id="BPMNShape__051">
+        <omgdc:Bounds height="72.0" width="105.0" x="3370.0" y="652.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_052" id="BPMNShape__052">
+        <omgdc:Bounds height="72.0" width="105.0" x="3520.0" y="652.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_053" id="BPMNShape__053">
+        <omgdc:Bounds height="71.0" width="105.0" x="3520.0" y="789.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_054" id="BPMNShape__054">
+        <omgdc:Bounds height="71.0" width="105.0" x="3370.0" y="789.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_055" id="BPMNShape__055">
+        <omgdc:Bounds height="73.0" width="105.0" x="3520.0" y="906.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_057" id="BPMNShape__057">
+        <omgdc:Bounds height="73.0" width="105.0" x="3520.0" y="1127.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_059" id="BPMNShape__059">
+        <omgdc:Bounds height="71.0" width="105.0" x="3680.0" y="653.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_060" id="BPMNShape__060">
+        <omgdc:Bounds height="71.0" width="105.0" x="3680.0" y="789.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_061" id="BPMNShape__061">
+        <omgdc:Bounds height="73.0" width="105.0" x="3680.0" y="906.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_020" id="BPMNShape__020">
+        <omgdc:Bounds height="72.0" width="105.0" x="1570.0" y="652.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_026" id="BPMNShape__026">
+        <omgdc:Bounds height="71.0" width="105.0" x="1742.0" y="518.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_027" id="BPMNShape__027">
+        <omgdc:Bounds height="73.0" width="105.0" x="1919.0" y="517.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_062" id="BPMNShape__062">
+        <omgdc:Bounds height="72.0" width="105.0" x="3912.0" y="652.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_063" id="BPMNShape__063">
+        <omgdc:Bounds height="77.0" width="105.0" x="3912.0" y="786.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_064" id="BPMNShape__064">
+        <omgdc:Bounds height="73.0" width="105.0" x="4062.0" y="788.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_065" id="BPMNShape__065">
+        <omgdc:Bounds height="73.0" width="105.0" x="4232.0" y="788.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_066" id="BPMNShape__066">
+        <omgdc:Bounds height="73.0" width="105.0" x="4430.0" y="788.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_067" id="BPMNShape__067">
+        <omgdc:Bounds height="88.0" width="105.0" x="3912.0" y="898.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_068" id="BPMNShape__068">
+        <omgdc:Bounds height="73.0" width="105.0" x="4062.0" y="906.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_069" id="BPMNShape__069">
+        <omgdc:Bounds height="73.0" width="105.0" x="4232.0" y="906.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_070" id="BPMNShape__070">
+        <omgdc:Bounds height="73.0" width="105.0" x="4430.0" y="906.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_071" id="BPMNShape__071">
+        <omgdc:Bounds height="73.0" width="105.0" x="3912.0" y="1026.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_072" id="BPMNShape__072">
+        <omgdc:Bounds height="73.0" width="105.0" x="3912.0" y="1127.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_073" id="BPMNShape__073">
+        <omgdc:Bounds height="73.0" width="105.0" x="4062.0" y="1127.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_074" id="BPMNShape__074">
+        <omgdc:Bounds height="73.0" width="105.0" x="4232.0" y="1127.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_075" id="BPMNShape__075">
+        <omgdc:Bounds height="73.0" width="105.0" x="3912.0" y="1247.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_076" id="BPMNShape__076">
+        <omgdc:Bounds height="73.0" width="105.0" x="4062.0" y="1247.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_077" id="BPMNShape__077">
+        <omgdc:Bounds height="73.0" width="105.0" x="4232.0" y="1247.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_079" id="BPMNShape__079">
+        <omgdc:Bounds height="72.0" width="105.0" x="4062.0" y="652.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_080" id="BPMNShape__080">
+        <omgdc:Bounds height="72.0" width="105.0" x="4062.0" y="518.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_081" id="BPMNShape__081">
+        <omgdc:Bounds height="70.0" width="105.0" x="4062.0" y="381.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_082" id="BPMNShape__082">
+        <omgdc:Bounds height="71.0" width="105.0" x="4232.0" y="381.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_083" id="BPMNShape__083">
+        <omgdc:Bounds height="71.0" width="105.0" x="4232.0" y="240.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_084" id="BPMNShape__084">
+        <omgdc:Bounds height="71.0" width="105.0" x="4430.0" y="240.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_085" id="BPMNShape__085">
+        <omgdc:Bounds height="71.0" width="105.0" x="4430.0" y="518.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_088" id="BPMNShape__088">
+        <omgdc:Bounds height="75.0" width="105.0" x="4684.0" y="651.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_089" id="BPMNShape__089">
+        <omgdc:Bounds height="77.0" width="105.0" x="4684.0" y="786.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_086" id="BPMNShape__086">
+        <omgdc:Bounds height="69.0" width="105.0" x="4684.0" y="519.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_087" id="BPMNShape__087">
+        <omgdc:Bounds height="70.0" width="105.0" x="4860.0" y="519.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_002" id="BPMNShape__002">
+        <omgdc:Bounds height="73.0" width="105.0" x="526.0" y="652.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_004" id="BPMNShape__004">
+        <omgdc:Bounds height="75.0" width="105.0" x="696.0" y="787.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_005" id="BPMNShape__005">
+        <omgdc:Bounds height="72.0" width="105.0" x="896.0" y="652.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_006" id="BPMNShape__006">
+        <omgdc:Bounds height="68.0" width="105.0" x="896.0" y="520.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_078" id="BPMNShape__078">
+        <omgdc:Bounds height="55.0" width="105.0" x="3912.0" y="1375.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_040" id="BPMNShape__040">
+        <omgdc:Bounds height="87.0" width="105.0" x="2571.0" y="510.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_041" id="BPMNShape__041">
+        <omgdc:Bounds height="70.0" width="105.0" x="2571.0" y="381.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_022" id="BPMNShape__022">
+        <omgdc:Bounds height="72.0" width="105.0" x="1400.0" y="518.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_021" id="BPMNShape__021">
+        <omgdc:Bounds height="70.0" width="105.0" x="1570.0" y="519.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_047" id="BPMNShape__047">
+        <omgdc:Bounds height="68.0" width="105.0" x="2900.0" y="654.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_028" id="BPMNShape__028">
+        <omgdc:Bounds height="67.0" width="105.0" x="1742.0" y="655.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_029" id="BPMNShape__029">
+        <omgdc:Bounds height="72.0" width="105.0" x="1742.0" y="789.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_032" id="BPMNShape__032">
+        <omgdc:Bounds height="72.0" width="105.0" x="1919.0" y="906.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_030" id="BPMNShape__030">
+        <omgdc:Bounds height="108.0" width="125.0" x="1732.0" y="888.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_031" id="BPMNShape__031">
+        <omgdc:Bounds height="73.0" width="105.0" x="1742.0" y="1026.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_009" id="BPMNShape__009">
+        <omgdc:Bounds height="78.0" width="115.0" x="1056.0" y="786.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_010" id="BPMNShape__010">
+        <omgdc:Bounds height="72.0" width="105.0" x="896.0" y="789.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_007" id="BPMNShape__007">
+        <omgdc:Bounds height="71.0" width="105.0" x="896.0" y="381.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_023" id="BPMNShape__023">
+        <omgdc:Bounds height="75.0" width="105.0" x="1570.0" y="379.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_033" id="BPMNShape__033">
+        <omgdc:Bounds height="83.0" width="105.0" x="2060.0" y="647.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_034" id="BPMNShape__034">
+        <omgdc:Bounds height="72.0" width="105.0" x="2060.0" y="789.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_042" id="BPMNShape__042">
+        <omgdc:Bounds height="88.0" width="105.0" x="2741.0" y="510.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_044" id="BPMNShape__044">
+        <omgdc:Bounds height="72.0" width="105.0" x="2900.0" y="518.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_043" id="BPMNShape__043">
+        <omgdc:Bounds height="75.0" width="105.0" x="2741.0" y="379.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_001" id="BPMNShape__001">
+        <omgdc:Bounds height="72.0" width="105.0" x="366.0" y="652.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_024" id="BPMNShape__024">
+        <omgdc:Bounds height="66.0" width="105.0" x="1742.0" y="242.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_025" id="BPMNShape__025">
+        <omgdc:Bounds height="65.0" width="105.0" x="1742.0" y="120.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_056" id="BPMNShape__056">
+        <omgdc:Bounds height="74.0" width="119.0" x="3513.0" y="1025.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_058" id="BPMNShape__058">
+        <omgdc:Bounds height="67.0" width="105.0" x="3680.0" y="1029.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_013" id="BPMNShape__013">
+        <omgdc:Bounds height="73.0" width="105.0" x="1061.0" y="906.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_012" id="BPMNShape__012">
+        <omgdc:Bounds height="73.0" width="105.0" x="1221.0" y="906.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_016" id="BPMNShape__016">
+        <omgdc:Bounds height="73.0" width="105.0" x="1400.0" y="906.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_017" id="BPMNShape__017">
+        <omgdc:Bounds height="73.0" width="105.0" x="1570.0" y="906.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="801.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="896.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="805.0" y="700.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="1113.0" y="724.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1113.0" y="786.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="1123.0" y="724.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="1273.0" y="863.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1273.0" y="906.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="1283.0" y="863.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="1326.0" y="824.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1400.0" y="825.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="1336.0" y="824.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="1452.0" y="873.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1452.0" y="906.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="1462.0" y="873.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
+        <omgdi:waypoint x="1505.0" y="825.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1570.0" y="824.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="1515.0" y="825.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow15" id="BPMNEdge_flow15">
+        <omgdi:waypoint x="2345.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2410.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="2355.0" y="688.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow18" id="BPMNEdge_flow18">
+        <omgdi:waypoint x="2515.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2571.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="2525.0" y="688.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow19" id="BPMNEdge_flow19">
+        <omgdi:waypoint x="2793.0" y="723.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2793.0" y="781.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="2801.0" y="740.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow20" id="BPMNEdge_flow20">
+        <omgdi:waypoint x="2846.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2900.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="2850.0" y="698.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow22" id="BPMNEdge_flow22">
+        <omgdi:waypoint x="3005.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3060.0" y="688.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow23" id="BPMNEdge_flow23">
+        <omgdi:waypoint x="3112.0" y="724.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3112.0" y="789.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="3122.0" y="724.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow24" id="BPMNEdge_flow24">
+        <omgdi:waypoint x="3165.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3221.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="3175.0" y="688.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow25" id="BPMNEdge_flow25">
+        <omgdi:waypoint x="3326.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3370.0" y="688.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow26" id="BPMNEdge_flow26">
+        <omgdi:waypoint x="3475.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3520.0" y="688.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow27" id="BPMNEdge_flow27">
+        <omgdi:waypoint x="3572.0" y="724.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3572.0" y="789.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="3582.0" y="724.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow30" id="BPMNEdge_flow30">
+        <omgdi:waypoint x="3572.0" y="860.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3572.0" y="906.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="3582.0" y="860.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow31" id="BPMNEdge_flow31">
+        <omgdi:waypoint x="3572.0" y="979.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3572.0" y="1025.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="3582.0" y="979.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow32" id="BPMNEdge_flow32">
+        <omgdi:waypoint x="3625.0" y="942.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3653.0" y="927.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3653.0" y="691.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3680.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="3635.0" y="942.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow33" id="BPMNEdge_flow33">
+        <omgdi:waypoint x="3732.0" y="724.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3732.0" y="789.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="3742.0" y="724.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow34" id="BPMNEdge_flow34">
+        <omgdi:waypoint x="3732.0" y="860.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3732.0" y="906.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="3742.0" y="860.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow36" id="BPMNEdge_flow36">
+        <omgdi:waypoint x="3785.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3912.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="3795.0" y="674.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow40" id="BPMNEdge_flow40">
+        <omgdi:waypoint x="1675.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1742.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="1685.0" y="688.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow41" id="BPMNEdge_flow41">
+        <omgdi:waypoint x="3964.0" y="724.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3964.0" y="786.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="3974.0" y="724.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow42" id="BPMNEdge_flow42">
+        <omgdi:waypoint x="4017.0" y="824.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4062.0" y="824.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="4027.0" y="824.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow43" id="BPMNEdge_flow43">
+        <omgdi:waypoint x="4167.0" y="824.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4232.0" y="824.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow46" id="BPMNEdge_flow46">
+        <omgdi:waypoint x="3964.0" y="863.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3964.0" y="898.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="3974.0" y="863.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow47" id="BPMNEdge_flow47">
+        <omgdi:waypoint x="4017.0" y="942.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4062.0" y="942.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="4027.0" y="942.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow48" id="BPMNEdge_flow48">
+        <omgdi:waypoint x="4167.0" y="942.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4232.0" y="942.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow51" id="BPMNEdge_flow51">
+        <omgdi:waypoint x="3964.0" y="986.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3964.0" y="1026.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="3974.0" y="986.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow52" id="BPMNEdge_flow52">
+        <omgdi:waypoint x="3964.0" y="1099.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3964.0" y="1127.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow53" id="BPMNEdge_flow53">
+        <omgdi:waypoint x="4017.0" y="1163.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4062.0" y="1163.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="4027.0" y="1163.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow56" id="BPMNEdge_flow56">
+        <omgdi:waypoint x="3964.0" y="1200.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3964.0" y="1247.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="3974.0" y="1200.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow57" id="BPMNEdge_flow57">
+        <omgdi:waypoint x="4017.0" y="1283.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4062.0" y="1283.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="4027.0" y="1283.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow61" id="BPMNEdge_flow61">
+        <omgdi:waypoint x="4017.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4062.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="4027.0" y="688.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow62" id="BPMNEdge_flow62">
+        <omgdi:waypoint x="4114.0" y="652.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4114.0" y="590.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="4123.0" y="636.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow65" id="BPMNEdge_flow65">
+        <omgdi:waypoint x="4167.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4284.0" y="689.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4284.0" y="452.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="4177.0" y="688.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow66" id="BPMNEdge_flow66">
+        <omgdi:waypoint x="4167.0" y="416.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4232.0" y="416.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow67" id="BPMNEdge_flow67">
+        <omgdi:waypoint x="4284.0" y="381.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4284.0" y="311.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="4294.0" y="361.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow68" id="BPMNEdge_flow68">
+        <omgdi:waypoint x="4337.0" y="275.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4430.0" y="275.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow70" id="BPMNEdge_flow70">
+        <omgdi:waypoint x="4337.0" y="416.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4482.0" y="416.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4482.0" y="518.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="4347.0" y="424.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow71" id="BPMNEdge_flow71">
+        <omgdi:waypoint x="4535.0" y="553.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4684.0" y="553.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="4545.0" y="553.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow74" id="BPMNEdge_flow74">
+        <omgdi:waypoint x="4482.0" y="589.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4482.0" y="689.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4684.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="4492.0" y="589.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow79" id="BPMNEdge_flow79">
+        <omgdi:waypoint x="311.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="366.0" y="688.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow80" id="BPMNEdge_flow80">
+        <omgdi:waypoint x="631.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="696.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="635.0" y="700.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow81" id="BPMNEdge_flow81">
+        <omgdi:waypoint x="578.0" y="652.0"></omgdi:waypoint>
+        <omgdi:waypoint x="578.0" y="416.0"></omgdi:waypoint>
+        <omgdi:waypoint x="896.0" y="416.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="586.0" y="628.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow84" id="BPMNEdge_flow84">
+        <omgdi:waypoint x="2676.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2741.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="2683.0" y="698.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow91" id="BPMNEdge_flow91">
+        <omgdi:waypoint x="3785.0" y="824.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3812.0" y="816.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3812.0" y="690.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3912.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="3795.0" y="824.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow93" id="BPMNEdge_flow93">
+        <omgdi:waypoint x="3625.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3680.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="3637.0" y="674.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow94" id="BPMNEdge_flow94">
+        <omgdi:waypoint x="4736.0" y="651.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4736.0" y="588.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="4746.0" y="651.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow95" id="BPMNEdge_flow95">
+        <omgdi:waypoint x="1166.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1570.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="1176.0" y="688.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow96" id="BPMNEdge_flow96">
+        <omgdi:waypoint x="1001.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1061.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="1011.0" y="688.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow97" id="BPMNEdge_flow97">
+        <omgdi:waypoint x="948.0" y="652.0"></omgdi:waypoint>
+        <omgdi:waypoint x="948.0" y="588.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="948.0" y="636.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow98" id="BPMNEdge_flow98">
+        <omgdi:waypoint x="3964.0" y="1320.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3964.0" y="1375.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="3974.0" y="1320.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow99" id="BPMNEdge_flow99">
+        <omgdi:waypoint x="2292.0" y="724.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2292.0" y="788.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="2302.0" y="724.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow100" id="BPMNEdge_flow100">
+        <omgdi:waypoint x="2462.0" y="724.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2462.0" y="788.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="2472.0" y="724.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow101" id="BPMNEdge_flow101">
+        <omgdi:waypoint x="4736.0" y="726.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4736.0" y="786.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="4746.0" y="726.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow102" id="BPMNEdge_flow102">
+        <omgdi:waypoint x="3520.0" y="824.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3475.0" y="824.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="3487.0" y="825.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow103" id="BPMNEdge_flow103">
+        <omgdi:waypoint x="748.0" y="724.0"></omgdi:waypoint>
+        <omgdi:waypoint x="748.0" y="787.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="756.0" y="735.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow104" id="BPMNEdge_flow104">
+        <omgdi:waypoint x="1622.0" y="784.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1622.0" y="724.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow105" id="BPMNEdge_flow105">
+        <omgdi:waypoint x="2623.0" y="653.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2623.0" y="597.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="2626.0" y="634.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow106" id="BPMNEdge_flow106">
+        <omgdi:waypoint x="2623.0" y="510.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2623.0" y="451.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="2631.0" y="487.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow107" id="BPMNEdge_flow107">
+        <omgdi:waypoint x="2676.0" y="553.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2741.0" y="554.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="2685.0" y="566.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow108" id="BPMNEdge_flow108">
+        <omgdi:waypoint x="1570.0" y="554.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1505.0" y="554.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="1538.0" y="553.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow109" id="BPMNEdge_flow109">
+        <omgdi:waypoint x="1675.0" y="554.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1742.0" y="553.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="1679.0" y="555.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow110" id="BPMNEdge_flow110">
+        <omgdi:waypoint x="1622.0" y="652.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1622.0" y="589.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="1632.0" y="652.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow119" id="BPMNEdge_flow119">
+        <omgdi:waypoint x="1847.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2060.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="33.0" x="1857.0" y="688.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow120" id="BPMNEdge_flow120">
+        <omgdi:waypoint x="1794.0" y="722.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1794.0" y="789.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="1804.0" y="722.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow121" id="BPMNEdge_flow121">
+        <omgdi:waypoint x="1794.0" y="861.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1794.0" y="888.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="42.0" width="100.0" x="1804.0" y="859.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow124" id="BPMNEdge_flow124">
+        <omgdi:waypoint x="1847.0" y="825.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1970.0" y="824.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1971.0" y="906.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="42.0" width="100.0" x="1857.0" y="825.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow128" id="BPMNEdge_flow128">
+        <omgdi:waypoint x="1794.0" y="996.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1794.0" y="1026.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="33.0" x="1794.0" y="999.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow130" id="BPMNEdge_flow130">
+        <omgdi:waypoint x="1857.0" y="942.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1919.0" y="942.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="1867.0" y="942.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow131" id="BPMNEdge_flow131">
+        <omgdi:waypoint x="1171.0" y="825.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1221.0" y="824.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="1181.0" y="825.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow132" id="BPMNEdge_flow132">
+        <omgdi:waypoint x="1056.0" y="825.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1001.0" y="825.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="1066.0" y="825.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow133" id="BPMNEdge_flow133">
+        <omgdi:waypoint x="4789.0" y="553.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4860.0" y="554.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow134" id="BPMNEdge_flow134">
+        <omgdi:waypoint x="4114.0" y="518.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4114.0" y="451.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow135" id="BPMNEdge_flow135">
+        <omgdi:waypoint x="4337.0" y="824.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4430.0" y="824.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow136" id="BPMNEdge_flow136">
+        <omgdi:waypoint x="4337.0" y="942.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4430.0" y="942.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow137" id="BPMNEdge_flow137">
+        <omgdi:waypoint x="1847.0" y="553.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1919.0" y="553.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow138" id="BPMNEdge_flow138">
+        <omgdi:waypoint x="4167.0" y="1163.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4232.0" y="1163.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow139" id="BPMNEdge_flow139">
+        <omgdi:waypoint x="4167.0" y="1283.0"></omgdi:waypoint>
+        <omgdi:waypoint x="4232.0" y="1283.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow141" id="BPMNEdge_flow141">
+        <omgdi:waypoint x="948.0" y="452.0"></omgdi:waypoint>
+        <omgdi:waypoint x="948.0" y="520.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="958.0" y="452.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow142" id="BPMNEdge_flow142">
+        <omgdi:waypoint x="1001.0" y="416.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1570.0" y="416.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="1011.0" y="416.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow147" id="BPMNEdge_flow147">
+        <omgdi:waypoint x="1622.0" y="379.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1622.0" y="274.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1742.0" y="275.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="1632.0" y="361.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow150" id="BPMNEdge_flow150">
+        <omgdi:waypoint x="1622.0" y="454.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1622.0" y="519.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="1632.0" y="454.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow151" id="BPMNEdge_flow151">
+        <omgdi:waypoint x="2165.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2240.0" y="688.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="2175.0" y="688.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow152" id="BPMNEdge_flow152">
+        <omgdi:waypoint x="2112.0" y="730.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2112.0" y="789.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="2122.0" y="730.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow153" id="BPMNEdge_flow153">
+        <omgdi:waypoint x="2846.0" y="554.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2900.0" y="554.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="2844.0" y="554.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow154" id="BPMNEdge_flow154">
+        <omgdi:waypoint x="2793.0" y="510.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2793.0" y="454.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="2800.0" y="487.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow155" id="BPMNEdge_flow155">
+        <omgdi:waypoint x="2952.0" y="590.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2952.0" y="654.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="2962.0" y="590.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow156" id="BPMNEdge_flow156">
+        <omgdi:waypoint x="3005.0" y="554.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3964.0" y="548.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3964.0" y="652.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="3015.0" y="554.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow157" id="BPMNEdge_flow157">
+        <omgdi:waypoint x="471.0" y="688.0"></omgdi:waypoint>
+        <omgdi:waypoint x="526.0" y="688.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow158" id="BPMNEdge_flow158">
+        <omgdi:waypoint x="1847.0" y="275.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3965.0" y="275.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3964.0" y="652.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="1857.0" y="275.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow159" id="BPMNEdge_flow159">
+        <omgdi:waypoint x="1794.0" y="242.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1794.0" y="185.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="1804.0" y="225.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow160" id="BPMNEdge_flow160">
+        <omgdi:waypoint x="3572.0" y="1099.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3572.0" y="1127.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="3572.0" y="1099.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow161" id="BPMNEdge_flow161">
+        <omgdi:waypoint x="3632.0" y="1062.0"></omgdi:waypoint>
+        <omgdi:waypoint x="3680.0" y="1062.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="3635.0" y="1064.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow162" id="BPMNEdge_flow162">
+        <omgdi:waypoint x="1273.0" y="979.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1273.0" y="1027.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="1273.0" y="979.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow163" id="BPMNEdge_flow163">
+        <omgdi:waypoint x="1221.0" y="942.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1166.0" y="942.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="1178.0" y="946.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow164" id="BPMNEdge_flow164">
+        <omgdi:waypoint x="1452.0" y="979.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1452.0" y="1027.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="26.0" x="1452.0" y="979.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow165" id="BPMNEdge_flow165">
+        <omgdi:waypoint x="1505.0" y="942.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1570.0" y="942.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="22.0" x="1505.0" y="942.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
