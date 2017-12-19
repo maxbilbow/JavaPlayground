@@ -1,4 +1,4 @@
-package com.maxbilbow.common.ui;
+package com.maxbilbow.bpmnf;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,6 +1,6 @@
-package com.maxbilbow.common.ui;
+package com.maxbilbow.bpmnf;
 
-import com.maxbilbow.common.ui.util.BrowserUtil;
+import com.maxbilbow.common.util.BrowserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;

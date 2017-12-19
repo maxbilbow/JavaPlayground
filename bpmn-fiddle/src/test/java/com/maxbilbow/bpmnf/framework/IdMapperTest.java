@@ -1,4 +1,4 @@
-package com.maxbilbow.common.ui.framework;
+package com.maxbilbow.bpmnf.framework;
 
 import org.junit.After;
 import org.junit.Assert;

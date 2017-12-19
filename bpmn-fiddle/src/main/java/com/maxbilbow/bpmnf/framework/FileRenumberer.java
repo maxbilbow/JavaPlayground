@@ -1,6 +1,6 @@
-package com.maxbilbow.common.ui.framework;
+package com.maxbilbow.bpmnf.framework;
 
-import com.maxbilbow.common.ui.config.FDLConstants;
+import com.maxbilbow.bpmnf.config.FDLConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

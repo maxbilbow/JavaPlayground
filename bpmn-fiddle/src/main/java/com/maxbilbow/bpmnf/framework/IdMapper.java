@@ -1,4 +1,4 @@
-package com.maxbilbow.common.ui.framework;
+package com.maxbilbow.bpmnf.framework;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;

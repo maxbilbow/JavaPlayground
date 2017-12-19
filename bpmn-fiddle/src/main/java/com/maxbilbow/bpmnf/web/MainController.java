@@ -1,7 +1,7 @@
-package com.maxbilbow.common.ui.web;
+package com.maxbilbow.bpmnf.web;
 
-import com.maxbilbow.common.ui.config.FDLConstants;
-import com.maxbilbow.common.ui.framework.Renumberer;
+import com.maxbilbow.bpmnf.config.FDLConstants;
+import com.maxbilbow.bpmnf.framework.Renumberer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;

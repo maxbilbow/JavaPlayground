@@ -35,9 +35,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>RELEASE</version>
+			<groupId>com.maxbilbow.common</groupId>
+			<artifactId>common-util</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>

@@ -1,4 +1,4 @@
-package com.maxbilbow.common.ui.config;
+package com.maxbilbow.bpmnf.config;
 
 import java.nio.charset.Charset;
 
