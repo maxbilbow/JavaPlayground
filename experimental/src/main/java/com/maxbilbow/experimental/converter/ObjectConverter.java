@@ -113,22 +113,27 @@ public class ObjectConverter implements Converter
       }
       else if (Enum.class.isAssignableFrom(aClassType))
       {
-        if (aItemValue instanceof String)
+        findEnum:
         {
-          for (T type : aClassType.getEnumConstants())
+          final String stringVal = aItemValue.toString();
+          for (T type : aClassType.getEnumConstants()) //Look for exact match
           {
-            if (((String) aItemValue).equalsIgnoreCase(type.toString()))
+            if (stringVal.equals(type.toString()))
             {
               newItemValue = type;
-              break;
+              break findEnum;
+            }
+          }
+          for (T type : aClassType.getEnumConstants()) //find case-insensitive match
+          {
+            if (stringVal.equalsIgnoreCase(type.toString()))
+            {
+              newItemValue = type;
+              break findEnum;
             }
           }
         }
       }
-    }
-    catch (ObjectConversionException e)
-    {
-      throw e;
     }
     catch (RuntimeException e)
     {

@@ -9,6 +9,6 @@ public class AspectTestTest
   public void getString()
   {
     final String s = new AspectTest().getString();
-    Assert.assertEquals("aspect",s);
+    Assert.assertEquals("aspectbollocks",s);
   }
 }

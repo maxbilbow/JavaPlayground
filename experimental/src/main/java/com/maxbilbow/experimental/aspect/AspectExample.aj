@@ -10,6 +10,6 @@ public aspect AspectExample
 //  after() : callGetString() { }
   
   String around() : callGetString() {
-    return "aspect";
+    return "aspect" + proceed();
   }
 }
