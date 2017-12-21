@@ -16,25 +16,18 @@ public class Chooser
 {
   private static Logger sLogger = LoggerFactory.getLogger(Chooser.class);
   
-  public static <T> T chooseFrom(final T... aSelection)
+  public static <T> T choose(final T first, final T... others)
   {
-    sLogger.debug("Choosing from array: " + Arrays.toString(aSelection));
-    if (aSelection == null || aSelection.length == 0)
-    {
-      return null;
-    }
-    if (aSelection.length == 1)
-    {
-      return aSelection[0];
-    }
+    sLogger.debug("Choosing from array: " + first + ", " + Arrays.toString(others));
+    if (others == null || others.length == 0)
+      return first;
+    
+    final int choice = RandomUtil.between(0,others.length);
   
-    final int max = aSelection.length - 1;
-    final int choice = RandomUtil.between(0,max);
-  
-    return aSelection[choice];
+    return choice == others.length ? first : others[choice];
   }
   
-  public static <T> T chooseFrom(final Collection<T> aSelection)
+  public static <T> T choose(final Collection<T> aSelection)
   {
     sLogger.debug("Choosing from list: " + aSelection);
     if (aSelection == null || aSelection.size() == 0)
@@ -47,7 +40,7 @@ public class Chooser
     }
   
     final int max = aSelection.size() - 1;
-    final int choice = (int) Math.round(Math.random() * max);
+    final int choice = RandomUtil.between(0,max);
   
     @Win
     int i = 0;
@@ -58,7 +51,7 @@ public class Chooser
     throw new RuntimeException("Choice was at index " + choice + " but somehow we missed it!");
   }
 
-  public static <T> T chooseFrom(final List<T> aSelection)
+  public static <T> T choose(final List<T> aSelection)
   {
     sLogger.debug("Choosing from list: " + aSelection);
     if (aSelection == null || aSelection.size() == 0)
@@ -71,7 +64,7 @@ public class Chooser
     }
   
     final int max = aSelection.size() - 1;
-    final int choice = (int) Math.round(Math.random() * max);
+    final int choice = RandomUtil.between(0,max);
   
     return aSelection.get(choice);
   }

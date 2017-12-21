@@ -94,7 +94,7 @@ public class NumberConverterTest
   
     private Class<? extends Number> randomType()
     {
-      return Chooser.chooseFrom(Number.class,
+      return Chooser.choose(Number.class,
               Integer.class,
               Float.class,
               Double.class,
