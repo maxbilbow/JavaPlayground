@@ -1,1299 +1,603 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
-  <process id="MRV" name="Meter read validation process map." isExecutable="true">
+  <process id="MRV" name="some descriptipn." isExecutable="true">
     <startEvent id="startevent1" name="Start"></startEvent>
-    <serviceTask id="_003" name="Are valid set values valid? MRV_003" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Check the settlement class is 2, 3 or 4
-	Else return false.
-
-If converter is fitted, check
-	Converter through zeros count is not null
-	Converter un-corrected read is not null
-       Corrector Uncorrected Reading is populated with the same value as the Meter Reading
-	Converter corrected read is not null
-	Converter read factor is not null
-	Converter correction factor is not null
-	Converter number of dials is not null
-Else return false.</documentation>
+    <serviceTask id="_003" name="node description and id: SOME_PREFIX_003" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvCheckValidSetValues</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_008" name="Is replacement read? MRV_008" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>If Read Type equals 'R'
-	Return true
-Else
-	Return false.</documentation>
+    <serviceTask id="_011" name="node description and id: SOME_PREFIX_011" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsReplacementRead</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_011" name="Does read to be replaced exist. MRV_011" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>If mprn, meter serial number, read date is null
-	Return false.
-
-Get all reads where the mprn, serial number, read date match and inustry status equals INDUSTRY_VALID or NOT_ISSUED.
-
-If no reads are returned
-	Return false.
-
-Else 
-	Return true.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvReadToBeReplacedExists</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_014" name="Suppress outbound industry flow and raise alert MRV_014" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>mrvRejectAndContinue</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_015" name="Is replacement read less than subsequent reads? MRV_015" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Get all subsequent reads by mprn, meter serial number and industry status in ('INDUSTRY_VALID', 'PENDING', 'REPLACED', 'ISSUED') and read date greater than current read date.
-
-If no reads are returned
-	Return true.
-
-If each read is greater than the current read value
-	Return true.
-Else
-	Return false.</documentation>
+    <serviceTask id="_015" name="node description and id: SOME_PREFIX_015" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsReplacementReadLessThanSubsequent</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_018" name="Suppress outbound industry flow and raise alert MRV_018" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>mrvRejectAndContinue</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_019" name="Update read to be replaced MRV_019" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Update all reads that match mprn, serial number, read date and industry status equals 'INDUSTRY_VALID' or 'NOT_ISSUED'
-
-Set industry status to REPLACED.</documentation>
+    <serviceTask id="_019" name="node description and id: SOME_PREFIX_019" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvUpdateReadToBeReplaced</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_039" name="Is opening or initial read? MRV_039" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>If read type equals 'R' and it's replacing an opening read.
-	Return true.
-
-If read type equals 'O'.
-	Return true.
-
-If read reason equals 'OPNT'.
-	Return true.
-
-Else 
-	Return false.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsOpeningOrInitialReading</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_035" name="Check read already exists? MRV_035" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>If MPRN, serial number, or read date is null.
-	Return true.
-
-If the read type equal 'R'
-	Return false.
-
-Get all reads that match MPRN, meter serial number, read date and the statuses are in ('INDUSTRY_VALID', 'ISSUED', 'PENDING')
-
-If reads exist
-	Return true.
-Else
-	Return false.</documentation>
+    <serviceTask id="_035" name="node description and id: SOME_PREFIX_035" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvReadAlreadyExists</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow4" name="True" sourceRef="_003" targetRef="_005">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("ARE_INITIAL_VALUES_VALID")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow5" name="True" sourceRef="_008" targetRef="_009">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_REPLACEMENT_READ")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow6" name="False" sourceRef="_011" targetRef="_012">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("DOES_READ_TO_REPLACE_EXIST")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow7" name="True" sourceRef="_011" targetRef="_015">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("DOES_READ_TO_REPLACE_EXIST")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow8" name="False" sourceRef="_015" targetRef="_016">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_REPLACEMENT_READ_LESS_THAN_SUBSEQUENT_READS")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow9" name="True" sourceRef="_015" targetRef="_019">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_REPLACEMENT_READ_LESS_THAN_SUBSEQUENT_READS")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="_037" name="Is read less than 25 business days? MRV_037" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Get system parameter PROCESS_MAX_BUSINESS_DAYS. (Default is 25 days.)
-
-If read type equals 'R'
-	Return TRUE.
-
-If current read date is greater than PROCESS_MAX_BUSINESS_DAYS value old
-	Return FALSE.</documentation>
+    <serviceTask id="_037" name="node description and id: SOME_PREFIX_037" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsReadDateLessThanMaxBusinessDays</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_036" name="Suppress outbound industry flow and raise alert MRV_036" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+    <serviceTask id="_036" name="node description and id: SOME_PREFIX_036" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>mrvRejectAndContinue</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_038" name="Suppress outbound industry flow and raise alert MRV_038" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+    <serviceTask id="_045" name="node description and id: SOME_PREFIX_045" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>mrvRejectAndContinue</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_045" name="Check last accepted read present MRV_045" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Get all reads for mprn, meter serial number, read date and where mrv status not equal new.
-
-If no reads are found
-	Return false.
-
-For each read, 
-If
-	Industry status equals 'INDUSTRY_VALID' or
-	Settlement class equals 3 and industry status equals 'PENDING' or
-	MRV status equals 'MRV_RECORDED' and industry status not equal 'REPLACED'
-	Return True.
-Else if
-	Industry status equals 'ISSUED'
-	Return false.
-
-Else
-	Return false.</documentation>
+    <serviceTask id="_048" name="node description and id: SOME_PREFIX_048" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string></activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_050" name="node description and id: SOME_PREFIX_050" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string></activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string></activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_052" name="node description and id: SOME_PREFIX_052" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvCheckLastAcceptedReads</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_046" name="Hold and Alert MRV_046" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Place the transaction on hold and raise an alert detailing the reasons.</documentation>
+    <serviceTask id="_054" name="node description and id: SOME_PREFIX_054" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>Hold</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_048" name="Check mandatory fields are present? MRV_048" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>If a converter is fitted check;
-	Last accepted converter corrected read value equals null.
-	Last accepted converter un-corrected read value equals null.
-	Return false
-Else
-	Check last accepted read date equals null.
-	Last accepted read value equals null.
-	Imperial asset indicator equals null.
-	Return false.
-
-If imperial asset indicator equals 'N'
-	Set value to
-Else if imperial asset indicator equals 'Y'
-	Set value to 
-
-If read factor equals zero,
-	Return false.
-
-If rolling AQ equals null,
-	Return false.
-
-If settlement class equals 2 and SOQ equals null,
-	Return false.
-
-Get tolerance for rolling AQ and settlement class,
-If tolerance equals null.
-	Return false.</documentation>
+    <serviceTask id="_059" name="node description and id: SOME_PREFIX_059" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvCheckMandatoryFields</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_049" name="Suppress outbound industry flow and raise alert MRV_049" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+    <serviceTask id="_061" name="node description and id: SOME_PREFIX_061" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>mrvRejectAndContinue</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_050" name="Calculate Energy MRV_050" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>If a converter is fitted, calculate the converter volume,
-	If the converter clock count equals zero,
-		Converter valume  = current converter corrected read - last accepted converter corrected read.
-	Else
-		Converter volume = (10 ^ number of dials) - (last accepted converter corrected read + current converter corrected read).
-
-Calculate the converter energy,
-	Converter Energy = (converter volume X converter correction factor X converter read factor X imperial asset indicator X cv value) / conversion factor.
-
-Calculate the meter volume,
-	If the meter clock count equals zero,
-		Meter volume = current meter read value - last accepted meter read value.
-	Else
-		Meter volume = (10 ^ number of dials) - (last accepted read value + current meter read value).
-
-Meter Energy = meter volume X correction factor X read factor X imperial asset indicator X cv value) / conversion factor.
-	
-Calculate days between reads.</documentation>
+    <serviceTask id="_027" name="node description and id: SOME_PREFIX_027" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvCalculateEnergy</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_051" name="Calculate Tolerances MRV_051" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Get the upper tolerance percent and override tolerance percent using the rolling AQ and the settlement class.
-
-if settlement class 2
-	Upper tolerance = SOQ X Upper tolerance percent.
-	Override Tolerance = SOQ X Override tolerance percent.
-
-Else if settlement class 3 or 4
-	Upper tolerance = Rolling AQ / 365 X Number of days between reads X Upper tolerance percent.
-	Override Tolerance = SOQ X Override tolerance percent.
-
-Lower tolerance is zero.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvCalculateTolerances</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_052" name="Is Stage One Valid? MRV_052" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>If Meter energy is less than zero
-	Set MRV status to MRV_INVALID_STAGE_1.
-
-Else if meter energy greater than or equal to zero and lesss than or equal to upper tolerance
-	Set MRV status to MRV_VALID_STAGE_1.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsMeterReadStageOneValid</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_053" name="Is Stage Two Valid? MRV_053" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>If meter energy greater than or equal to upper tolerance and less than or equal to override tolerance
-	Set override flag to 'Y'
-	Set MRV status to MRV_VALID_STAGE_2
-
-Else if meter energy greater than override tolerance
-	Set MRV status to MRV_INVALID_STAGE_2.</documentation>
+    <serviceTask id="_063" name="node description and id: SOME_PREFIX_063" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsMeterReadStageTwoValid</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_054" name="Suppress outbound industry flow and raise alert MRV_054" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+    <serviceTask id="_064" name="node description and id: SOME_PREFIX_064" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>mrvRejectAndContinue</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <sequenceFlow id="flow15" name="False" sourceRef="_035" targetRef="_037">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("DOES_READ_ALREADY_EXISTS")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow18" name="True" sourceRef="_037" targetRef="_039">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_READ_LESS_THAN_25_BUSINESS_DAYS")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow19" name="False" sourceRef="_045" targetRef="_046">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_LAST_ACCEPTED_READS_PRESENT")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow20" name="True" sourceRef="_045" targetRef="_047">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_LAST_ACCEPTED_READS_PRESENT")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow22" sourceRef="_047" targetRef="_048"></sequenceFlow>
-    <sequenceFlow id="flow23" name="False" sourceRef="_048" targetRef="_049">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("ARE_MANDATORY_FIELDS_PRESENT")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow24" name="True" sourceRef="_048" targetRef="_050">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("ARE_MANDATORY_FIELDS_PRESENT")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow25" sourceRef="_050" targetRef="_051"></sequenceFlow>
-    <sequenceFlow id="flow26" sourceRef="_051" targetRef="_052"></sequenceFlow>
-    <sequenceFlow id="flow27" name="False" sourceRef="_052" targetRef="_053">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_READ_STAGE_ONE_VALID")}]]></conditionExpression>
-    </sequenceFlow>
-    <serviceTask id="_055" name="Is Stage Two Parameter Active? MRV_055" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Get system parameter STAGE_TWO_VALID_HELD.
-
-If STAGE_TWO_VALID_HELD equals true
-	Return true.
-Else
-	Return false.</documentation>
+    <serviceTask id="_065" name="node description and id: SOME_PREFIX_065" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string></activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_066" name="node description and id: SOME_PREFIX_066" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsStageTwoValidationParamActive</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_057" name="Suppress outbound industry flow and raise alert MRV_057" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+    <serviceTask id="_068" name="node description and id: SOME_PREFIX_068" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>mrvRejectAndContinue</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_059" name="Is Converter fitted? MRV_059" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>If a converter is fitted,
-	Return true.
-Else
-	Return false.</documentation>
+    <serviceTask id="_069" name="node description and id: SOME_PREFIX_069" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string></activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_070" name="node description and id: SOME_PREFIX_070" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string></activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string></activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_072" name="node description and id: SOME_PREFIX_072" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsAConverterFitted</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_060" name="Is Converter Ratio Valid? MRV_060" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Get converter ratio from the MRV_CONVERTER_RATIO table by matching on settlement class.
-
-If converter volume, meter volum or correction factor equals zero
-	Return false.
-
-Calculate converter ratio,
-	Calculated converter ratio = converter volume / meter volume / correction factor.
-
-If Calculated converter ratio greater than or equal to converter lower ration and less than or equal to upper ratio,
-	Return true.
-Else
-	Return false.</documentation>
+    <serviceTask id="_073" name="node description and id: SOME_PREFIX_073" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
+        </activiti:field>
+        <activiti:field name="taskBean">
+          <activiti:string></activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="_075" name="node description and id: SOME_PREFIX_075" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
+      <extensionElements>
+        <activiti:field name="expressionType">
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvCalculateConverterRatio</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_061" name="Suppress outbound industry flow and raise alert MRV_061" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvRejectAndContinue</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_020" name="Is Check Read? MRV_020" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Get system paremeter CHECK_READ_CODE. (Default is 'O15')
-
-If transaction type received equals CHECK_READ_CODE,
-	Return true.
-Else
-	Return false.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsCheckRead</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_026" name="Store Data MRV_026" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Store all read data available. 
-
-If there is any calculated validation status such as VALID_STAGE_1, VALID_STAGE_2, MRV_BYPASSED etc. then set the MRV_STATUS to it, otherwise set it to MRV_VALIDATION_OFF.
-
-Set the industry status to ISSUED.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvStoreDataCalculatedIssued</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_027" name="Issue SFN MRV_027" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Creates a SFN task to do.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvCreateSfnTaskToDo</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <sequenceFlow id="flow30" name="True" sourceRef="_053" targetRef="_055">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_READ_STAGE_TWO_VALID")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow31" name="True" sourceRef="_055" targetRef="_056">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_STAGE_TWO_VALID_PARAMETER_ACTIVE")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow32" name="False" sourceRef="_055" targetRef="_059">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_STAGE_TWO_VALID_PARAMETER_ACTIVE")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow33" name="True" sourceRef="_059" targetRef="_060">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_A_CONVERTER_FITTED")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow34" name="False" sourceRef="_060" targetRef="_061">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_CONVERTER_RATIO_VALID")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow36" name="False" sourceRef="_059" targetRef="_062">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_A_CONVERTER_FITTED")}]]></conditionExpression>
-    </sequenceFlow>
-    <serviceTask id="_062" name="Is Settlement class 3? MRV_062" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>If settlement class equals 3,
-	Return true.
-Else
-	Return false.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsSettlementClass3</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_063" name="Is Opening Read or Replacement Read MRV_063" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>If read reason equals 'OPNT' or read type equals 'O'
-	Return true.
-
-Else if read type equals 'R'
-	Return true.
-
-Else
-	Return false.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsOpeningOrReplacementRead</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_064" name="Set previous pending reads as Issued MRV_064" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Get all pending reads by MPRN, serial number and industry status equals 'PENDING'.
-
-Update each read, set industry status to ISSUED.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvMarkPreviousPendingReadsAsIssued</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_065" name="Store Data MRV_065" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Store all read data available.
-
-If there is any calculated validation status such as VALID_STAGE_1, VALID_STAGE_2, MRV_BYPASSED etc. then set the MRV_STATUS to it, otherwise set it to MRV_VALIDATION_OFF.
-
-Set the industry status to ISSUED.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvStoreDataCalculatedIssued</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_066" name="Issue UBR MRV_066" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Creates a UBR task to do.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvCreateUbrTaskToDo</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <sequenceFlow id="flow40" name="False" sourceRef="_020" targetRef="_028">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_CHECK_READ")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow41" name="True" sourceRef="_062" targetRef="_063">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_SETTLEMENT_CLASS_3")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow42" name="True" sourceRef="_063" targetRef="_064">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_OPENING_OR_REPLACEMENT_READ")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow43" sourceRef="_064" targetRef="_065"></sequenceFlow>
-    <serviceTask id="_067" name="Does batch frequency match last pending? MRV_067" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Get the last pending read by MPRN, serial number and industry status equals 'PENDING'.
-
-If batch read frequency equal last pending read batch frequency,
-	Return true.
-
-Else
-	Return false.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvDoesBatchReadFrequencyMatchLastPendingRead</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_068" name="Set all pending as Issued. MRV_068" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Get all pending reads by MPRN, serial number and industry status equals 'PENDING'.
-
-Update each read, set industry status to ISSUED.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvMarkPreviousPendingReadsAsIssued</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_069" name="Store Data MRV_069" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Store all read data available.
-
-If there is any calculated validation status such as VALID_STAGE_1, VALID_STAGE_2, MRV_BYPASSED etc. then set the MRV_STATUS to it, otherwise set it to MRV_VALIDATION_OFF.
-
-Set the industry status to ISSUED.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvStoreDataCalculatedIssued</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_070" name="Issue UBR MRV_070" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Creates a UBR task to do.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvCreateUbrTaskToDo</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <sequenceFlow id="flow46" name="False" sourceRef="_063" targetRef="_067">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_OPENING_OR_REPLACEMENT_READ")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow47" name="False" sourceRef="_067" targetRef="_068">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("DOES_THE_BATCH_READ_FREQUENCY_MATCH_THE_LAST_PENDING")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow48" sourceRef="_068" targetRef="_069"></sequenceFlow>
-    <serviceTask id="_071" name="Store Data MRV_071" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Store all read data available.
-
-Set mrv_status to MRV_RECORDED.
-
-Set the industry_status to PENDING.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvStoreDataPending</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_072" name="Do issued reads exist after read date? MRV_072" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Get all reads by MPRN, serial number and where current read date is less than read date.
-
-If any reads exist,
-	Return true.
-
-Else
-	Return false.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvDoIssuedReadsExistAfterReadDate</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_073" name="Store Data MRV_073" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Store all read data available</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvMarkAsIssued</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_074" name="Issue UBR MRV_074" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Creates a UBR task to do.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvCreateUbrTaskToDo</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_075" name="Batch frequency hit? MRV_075" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Get all reads that have a industry status of 'PENDING' that match on MPRN, serial number.
-
-If number of reads returned equals batch read frequency,
-	Return true.
-
-Else,
-	Return false.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvDoesPendingCountMatchBatchFrequency</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow51" name="True" sourceRef="_067" targetRef="_071">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("DOES_THE_BATCH_READ_FREQUENCY_MATCH_THE_LAST_PENDING")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow52" sourceRef="_071" targetRef="_072"></sequenceFlow>
     <sequenceFlow id="flow53" name="True" sourceRef="_072" targetRef="_073">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("DO_ISSUED_READS_EXIST_AFTER_THIS_READ_DATE")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="_076" name="Store Data MRV_076" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Store all read data available</documentation>
+    <serviceTask id="_076" name="node description and id: SOME_PREFIX_076" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>mrvMarkBatchAsIssued</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_077" name="Issue UBR MRV_077" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Creates a UBR task to do.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvCreateUbrTaskToDo</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow56" name="False" sourceRef="_072" targetRef="_075">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("DO_ISSUED_READS_EXIST_AFTER_THIS_READ_DATE")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow57" name="True" sourceRef="_075" targetRef="_076">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_BATCH_READ_FREQUENCY_HIT")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="_079" name="Are there any reads in Pending? MRV_079" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Check to see if the are any pending reads for the MPRN and serial number.
-
-If any reads are returned,
-	Return true.
-
-Else,
-	Return false.</documentation>
+    <serviceTask id="_079" name="node description and id: SOME_PREFIX_079" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvDoPendingReadsExist</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_080" name="Mark them as Issued. MRV_080" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Get all pending reads by MPRN, serial number and industry status equals 'PENDING'.
-
-Update each read, set industry status to ISSUED.</documentation>
+    <serviceTask id="_080" name="node description and id: SOME_PREFIX_080" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>mrvMarkPendingReadsAsIssued</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_081" name="Issue UBR MRV_081" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Creates a UBR task to do.</documentation>
+    <serviceTask id="_081" name="node description and id: SOME_PREFIX_081" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvCreateUbrTaskToDo</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <sequenceFlow id="flow61" name="False" sourceRef="_062" targetRef="_079">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_SETTLEMENT_CLASS_3")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow62" name="True" sourceRef="_079" targetRef="_080">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("ARE_THERE_ANY_READS_IN_PENDING_FOR_THIS_MTPNT_AND_SERIAL_NUMBER")}]]></conditionExpression>
-    </sequenceFlow>
-    <serviceTask id="_082" name="Is settlement class two? MRV_082" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>If settlement class equals 2,
-	Return true.
-Else
-	Return false.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsSettlementClass2</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow65" name="False" sourceRef="_079" targetRef="_082">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("ARE_THERE_ANY_READS_IN_PENDING_FOR_THIS_MTPNT_AND_SERIAL_NUMBER")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow66" sourceRef="_081" targetRef="_082"></sequenceFlow>
-    <serviceTask id="_083" name="Store Data MRV_083" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Store all read data available.
-
-If there is any calculated validation status such as VALID_STAGE_1, VALID_STAGE_2, MRV_BYPASSED etc. then set the MRV_STATUS to it, otherwise set it to MRV_VALIDATION_OFF.
-
-Set the industry status to ISSUED.</documentation>
+    <serviceTask id="_083" name="node description and id: SOME_PREFIX_083" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>mrvStoreDataCalculatedIssued</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_084" name="Issue UDR MRV_084" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Creates a UDR task to do.</documentation>
+    <serviceTask id="_084" name="node description and id: SOME_PREFIX_084" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvCreateUdrTaskToDo</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_085" name="Is Validation On? MRV_085" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>This checks to see if MRV validation is switched on by looking at the configured MRV System Parameter.
-
-Is READ_VALIDATION_ON = True</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsReadValidationOn</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_088" name="Passes Periodic Validation? MRV_088" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>If there is no last accepted  not recordOnly read
-then return true.
- 
-If read reason equals 'OPNT' or read type equals 'O,
-	Return true.
-
-Else if read type equals 'R',
-	Return true.
-
-If last accepted  not recordOnly read is found then get the periodic validation row where the rolling AQ is greater than or equal to the lower range and less than or equal to the upper range.  This looks at the MRV_PERIODIC_VALIDATION table.
-
-If number of days between the reads &lt; the periodic validation frequency,
-	Return false.
-Else,
-	Return true.</documentation>
+    <serviceTask id="_088" name="node description and id: SOME_PREFIX_088" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvPeriodicValidation</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_089" name="Suppress outbound industry flow and raise alert MRV_089" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+    <serviceTask id="_089" name="node description and id: SOME_PREFIX_089" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>mrvRejectAndContinue</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_086" name="Store Data MRV_086" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Store all read data available.
-
-If there is any calculated validation status such as VALID_STAGE_1, VALID_STAGE_2, MRV_BYPASSED etc. then set the MRV_STATUS to it, otherwise set it to MRV_VALIDATION_OFF.
-
-Set the industry status to ISSUED.</documentation>
+    <serviceTask id="_087" name="node description and id: SOME_PREFIX_087" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvStoreDataCalculatedIssued</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_087" name="Issue UMR MRV_087" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Creates a UMR task to do.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvCreateUmrTaskToDo</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <sequenceFlow id="flow67" name="True" sourceRef="_082" targetRef="_083">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_SETTLEMENT_CLASS_2")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow68" sourceRef="_083" targetRef="_084"></sequenceFlow>
-    <sequenceFlow id="flow70" name="False" sourceRef="_082" targetRef="_085">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_SETTLEMENT_CLASS_2")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow71" name="False" sourceRef="_085" targetRef="_086">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_MRV_VALIDATION_ON")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow74" name="True" sourceRef="_085" targetRef="_088">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_MRV_VALIDATION_ON")}]]></conditionExpression>
-    </sequenceFlow>
-    <serviceTask id="_002" name="Is Validation on? MRV_002" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>This checks to see if MRV validation is switched on by looking at the configured MRV System Parameter.
-
-Is READ_VALIDATION_ON = True</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsReadValidationOn</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow79" sourceRef="startevent1" targetRef="_001"></sequenceFlow>
     <sequenceFlow id="flow80" name="True" sourceRef="_002" targetRef="_003">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_MRV_VALIDATION_ON")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow81" name="False" sourceRef="_002" targetRef="_007">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_MRV_VALIDATION_ON")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow84" name="False" sourceRef="_039" targetRef="_045">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_OPENING_OR_INITIAL_READ")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow91" name="True" sourceRef="_060" targetRef="_062">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_CONVERTER_RATIO_VALID")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="_004" name="Suppress outbound industry flow and raise alert MRV_004" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+    <serviceTask id="_004" name="node description and id: SOME_PREFIX_004" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvRejectAndContinue</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <sequenceFlow id="flow93" name="True" sourceRef="_052" targetRef="_059">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_READ_STAGE_ONE_VALID")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow94" name="True" sourceRef="_088" targetRef="_086">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_PASSES_PERIODIC_VALIDATION")}]]></conditionExpression>
-    </sequenceFlow>
-    <serviceTask id="_005" name="Is Record Only File Type? MRV_005" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Checks to see if the record type is a record only file type.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsReadTypeRecordOnly</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow95" name="False" sourceRef="_008" targetRef="_020">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_REPLACEMENT_READ")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow96" name="False" sourceRef="_005" targetRef="_008">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_READ_TYPE_RECORD_ONLY")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="_006" name="Store Data MRV_006" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Creates the Meter Read record setting the industry status to 'INDUSTRY_VALID' and the MRV status to 'MRV_RECORDED'.</documentation>
+    <serviceTask id="_006" name="node description and id: SOME_PREFIX_006" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>mrvStoreDataRecordOnly</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <sequenceFlow id="flow97" name="True" sourceRef="_005" targetRef="_006">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_READ_TYPE_RECORD_ONLY")}]]></conditionExpression>
-    </sequenceFlow>
-    <serviceTask id="_078" name="Success MRV_078" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Continue to process transaction on main process map.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvSuccessAfterActivitiDecisionBox</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow98" name="False" sourceRef="_075" targetRef="_078">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_BATCH_READ_FREQUENCY_HIT")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow99" name="True" sourceRef="_035" targetRef="_036">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("DOES_READ_ALREADY_EXISTS")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow100" name="False" sourceRef="_037" targetRef="_038">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_READ_LESS_THAN_25_BUSINESS_DAYS")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow101" name="False" sourceRef="_088" targetRef="_089">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_PASSES_PERIODIC_VALIDATION")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow102" name="False" sourceRef="_053" targetRef="_054">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_READ_STAGE_TWO_VALID")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow103" name="False" sourceRef="_003" targetRef="_004">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("ARE_INITIAL_VALUES_VALID")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow104" sourceRef="_019" targetRef="_020"></sequenceFlow>
-    <serviceTask id="_040" name="Is opening read date within SSD tolerances?    MRV_040" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>If current read date is within the period (supply start date - n days &amp; supply start date + n days)
-	Return TRUE
-Else
-	Return FALSE.</documentation>
+    <serviceTask id="_040" name="node description and id: SOME_PREFIX_040" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsOpeningReadDateWithinSSDTolerance</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow105" name="True" sourceRef="_039" targetRef="_040">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_OPENING_OR_INITIAL_READ")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="_041" name="Suppress outbound industry flow and raise alert MRV_041" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+    <serviceTask id="_041" name="node description and id: SOME_PREFIX_041" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>mrvRejectAndContinue</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <sequenceFlow id="flow106" name="False" sourceRef="_040" targetRef="_041">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_OPENING_READ_DATE_WITHIN_TOLERANCES")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow107" name="True" sourceRef="_040" targetRef="_042">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_OPENING_READ_DATE_WITHIN_TOLERANCES")}]]></conditionExpression>
-    </sequenceFlow>
-    <serviceTask id="_022" name="Store Data MRV_022" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Creates the Meter Read record setting the industry status to 'INDUSTRY_VALID' and the MRV status to 'MRV_RECORDED'.</documentation>
+    <serviceTask id="_021" name="node description and id: SOME_PREFIX_021" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvStoreDataRecordOnly</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_021" name="Is settlement class two? MRV_021" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>If Settlement class equals 2,
-	Return true.
-Else
-	Return false.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsSettlementClass2</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow108" name="True" sourceRef="_021" targetRef="_022">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_SETTLEMENT_CLASS_2")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow109" name="False" sourceRef="_021" targetRef="_026">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_SETTLEMENT_CLASS_2")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow110" name="True" sourceRef="_020" targetRef="_021">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_CHECK_READ")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="_047" name="CV Lookup successful? MRV_047" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Lookup calorific values from MRV_CALORIFIC_VALUE table where 
-	K0260 is greater than or equal to the last accepted read date and
-	K0260 is less than or equal to the current read date and
-	K1052 equals the LDZ.
-
-If calorific values are returned. 
-	Calculate the average calorific value.
-
-Else
-	Lookup the static calorific value for the current LDZ.  This looks at the MRV_STATIC_CAL_VALUE table.
-
-If no static value is found,
-	Return the default. (Default is 39.0)</documentation>
+    <serviceTask id="_047" name="node description and id: SOME_PREFIX_047" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>mrvLookupCv</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_028" name="Is ONJOB or ONUPD? MRV_028" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Check whether the read was generated by an ONJOB/ONUPD?
-
-If it was generated by an ONJOB/ONUPD then proceed to further ONJOB/ONUPD checking.
-
-If it was not generated by an ONJOB/ONUPD then proceed to check whether the read is an opening or intial read.</documentation>
+    <serviceTask id="_028" name="node description and id: SOME_PREFIX_028" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrv_isOnjob</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow119" name="FALSE" sourceRef="_028" targetRef="_033">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_ONJOB") && !BPMN_TOKEN.getNonPersistentVar("IS_ONUPD")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true && !true}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="_029" name="Is Install, Reposition or Removal? MRV_029" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Check if the read was from an ONUPD
-
-If it was proceed to store data
-
-If it was not then proceed to check the current read reason.
-
-If it is "OPNN" or "OPNX" the read is from a meter being installed.
-
-If it is "FINC" or "FINX" the read is from a meter being removed.</documentation>
+    <serviceTask id="_029" name="node description and id: SOME_PREFIX_029" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrv_isOnjobInstallOrRemoval</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow120" name="TRUE" sourceRef="_028" targetRef="_029">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_ONJOB") || BPMN_TOKEN.getNonPersistentVar("IS_ONUPD")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true || true}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow121" name="REMOVAL, REPOSITION" sourceRef="_029" targetRef="_030">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("ONJOB_JOB_TYPE") == "REMOVAL"}]]></conditionExpression>
+    <sequenceFlow id="flow121" name="" sourceRef="_029" targetRef="_030">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true == "REMOVAL"}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="_032" name="Store Data MRV MRV_032" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Creates the Meter Read record and Meter Read Data record setting the industry status to 'ONJOB_VALID' and the MRV status to 'MRV_RECORDED'.</documentation>
+    <serviceTask id="_032" name="node description and id: SOME_PREFIX MRV_032" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>mrvStoreDataOnjob</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_030" name="Are Read Date and Read Value &gt; Last Accepted Read Date and Read Value? MRV_030" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Check whether there is a last accepted read 
-
-If no last accepted read exists, then proceed to store data.
-
-If there is a last accepted read, check whether the read date and read value on the ONJOB read are greater than the values of the last accepted read.
-
-If either of these values is lower than those on the last accepted read, proceed to place the transaction on hold.
-
-Otherwise proceed to store the data.</documentation>
+    <sequenceFlow id="flow124" name="" sourceRef="_029" targetRef="_032">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true == "INSTALL"}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="_031" name="node description and id: SOME_PREFIX_031" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrv_isOnjobReadValid</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <sequenceFlow id="flow124" name="INSTALL, REPRT, REFSH, APPNT, UPDTE" sourceRef="_029" targetRef="_032">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("ONJOB_JOB_TYPE") == "INSTALL"}]]></conditionExpression>
-    </sequenceFlow>
-    <serviceTask id="_031" name="Hold and Alert MRV_031" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Place the transaction on hold and raise an alert detailing the reasons.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvRejectAndContinue</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <sequenceFlow id="flow128" name="FALSE" sourceRef="_030" targetRef="_031">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("ONJOB_READ_VALID")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow130" name="TRUE" sourceRef="_030" targetRef="_032">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("ONJOB_READ_VALID")}]]></conditionExpression>
-    </sequenceFlow>
-    <serviceTask id="_009" name="Does CHECK Read Already Exist? MRV_009" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Check whether a CHECK read exists for this date, serial number, industry status of ISSUED and transaction type of SFN_O15.
-
-If a CHECK read exists place the transaction on hold.
-
-If no CHECK read exists, proceed to check for the read to be replaced.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvDoAnyCheckReadsExistOnReadDate</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_010" name="Suppress outbound industry flow and raise alert MRV_010" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+    <serviceTask id="_010" name="node description and id: SOME_PREFIX_010" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>mrvRejectAndContinue</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow131" name="False" sourceRef="_009" targetRef="_011">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("CHECK_READ_EXISTS_ON_READ_DATE")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow132" name="True" sourceRef="_009" targetRef="_010">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("CHECK_READ_EXISTS_ON_READ_DATE")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow133" sourceRef="_086" targetRef="_087"></sequenceFlow>
     <sequenceFlow id="flow134" sourceRef="_080" targetRef="_081"></sequenceFlow>
@@ -1302,277 +606,151 @@ If no CHECK read exists, proceed to check for the read to be replaced.</document
     <sequenceFlow id="flow137" sourceRef="_026" targetRef="_027"></sequenceFlow>
     <sequenceFlow id="flow138" sourceRef="_073" targetRef="_074"></sequenceFlow>
     <sequenceFlow id="flow139" sourceRef="_076" targetRef="_077"></sequenceFlow>
-    <serviceTask id="_007" name="Is Record Only File Type? MRV_007" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Checks to see if the record type is a record only file type.</documentation>
+    <serviceTask id="_007" name="node description and id: SOME_PREFIX_007" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsReadTypeRecordOnly</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <sequenceFlow id="flow141" name="True" sourceRef="_007" targetRef="_006">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_READ_TYPE_RECORD_ONLY")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow142" name="False" sourceRef="_007" targetRef="_023">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_READ_TYPE_RECORD_ONLY")}]]></conditionExpression>
-    </sequenceFlow>
-    <serviceTask id="_023" name="Is Check Read? MRV_023" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Get system paremeter CHECK_READ_CODE. (Default is 'O15')
-
-If transaction type received equals CHECK_READ_CODE,
-	Return true.
-Else
-	Return false.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsCheckRead</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow147" name="False" sourceRef="_023" targetRef="_024">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_CHECK_READ")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow150" name="True" sourceRef="_023" targetRef="_021">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_CHECK_READ")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="_033" name="If SED is populated is read date within tolerance? MRV_033" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Check if the Supply Period ETD is populated.
-
-If it is and the read is a closing read, then check whether the read date is within the tolerance.
-
-If the read date is within the tolerance, move on.
-
-If the read date is not within the tolerance, place the transaction on hold and raise an alert.</documentation>
+    <serviceTask id="_033" name="node description and id: SOME_PREFIX_033" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsSEDWithinTolerance</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_034" name="Suppress outbound industry flow and raise alert MRV_034" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
-    </serviceTask>
-    <sequenceFlow id="flow151" name="True" sourceRef="_033" targetRef="_035">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("SED_EITHER_NULL_OR_VALID")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow152" name="False" sourceRef="_033" targetRef="_034">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("SED_EITHER_NULL_OR_VALID")}]]></conditionExpression>
-    </sequenceFlow>
-    <serviceTask id="_042" name="Is read submission date within SSD tolerances? MRV_042" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Using the READ_SUBMISSION_DATE stored on the token, determine whether this is within the SSD tolerances.
-
-If it is move on.
-
-If it is not, place the transaction on hold and raise an alert.</documentation>
+    <serviceTask id="_034" name="node description and id: SOME_PREFIX_034" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvIsReadSubmissionDateWithinTolerance</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_044" name="Check last accepted read present MRV_044" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Get all reads for mprn, meter serial number, read date and where mrv status not equal new.
-
-If no reads are found
-	Return false.
-
-For each read, 
-If
-	Industry status equals 'INDUSTRY_VALID' or
-	Settlement class equals 3 and industry status equals 'PENDING' or
-	MRV status equals 'MRV_RECORDED' and industry status not equal 'REPLACED'
-	Return True.
-Else if
-	Industry status equals 'ISSUED'
-	Return false.
-
-Else
-	Return false.</documentation>
+    <serviceTask id="_044" name="node description and id: SOME_PREFIX_044" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrvCheckLastAcceptedReads</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow153" name="True" sourceRef="_042" targetRef="_044">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("READ_SUBMISSION_DATE_VALID")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="_043" name="Suppress outbound industry flow and raise alert MRV_043" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Suppress outbound industry flow and raise an alert detailing the reasons.</documentation>
+    <serviceTask id="_043" name="node description and id: SOME_PREFIX_043" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>mrvRejectAndContinue</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <sequenceFlow id="flow154" name="False" sourceRef="_042" targetRef="_043">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("READ_SUBMISSION_DATE_VALID")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow155" name="True" sourceRef="_044" targetRef="_047">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_LAST_ACCEPTED_READS_PRESENT")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow156" name="False" sourceRef="_044" targetRef="_062">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_LAST_ACCEPTED_READS_PRESENT")}]]></conditionExpression>
-    </sequenceFlow>
-    <serviceTask id="_001" name="Determine read submission date MRV_001" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Get the Supply Period EFD and Todays date, and determine which of these is the latter.
-
-Store this date on the token in READ_SUBMISSION_DATE to be used in later map nodes.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvDetermineReadSubmissionDate</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow157" sourceRef="_001" targetRef="_002"></sequenceFlow>
-    <serviceTask id="_024" name="Is ONJOB or ONUPD? MRV_024" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Check whether the read was generated by an ONJOB/ONUPD?
-
-If it was generated by an ONJOB/ONUPD then store the data
-
-If it was not proceed to further MRV checks</documentation>
+    <serviceTask id="_024" name="node description and id: SOME_PREFIX_024" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>mrv_isOnjob</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="_025" name="Store Data MRV MRV_025" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Creates the Meter Read record and Meter Read Data record setting the industry status to 'ONJOB_VALID' and the MRV status to 'MRV_RECORDED'.</documentation>
+    <serviceTask id="_025" name="node description and id: SOME_PREFIX MRV_025" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>mrvStoreDataOnjob</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <sequenceFlow id="flow158" name="False" sourceRef="_024" targetRef="_062">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("IS_ONJOB") && !BPMN_TOKEN.getNonPersistentVar("IS_ONUPD")}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow159" name="True" sourceRef="_024" targetRef="_025">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("IS_ONJOB") || BPMN_TOKEN.getNonPersistentVar("IS_ONUPD")}]]></conditionExpression>
-    </sequenceFlow>
-    <serviceTask id="_056" name="Is MRV Configured to hold at this point? MRV_056" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Check for value of system parameter HOLD_ON_IS_STAGE_TWO_PARAMETER_ACTIVE
-
-If set to TRUE move to hold ann raise an appropriate alert
-
-If set to FALSE move to suppress outbound industry flow and raise an appropriate alert.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>stage2ParamIsMrvConfiguredToHold</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow160" name="False" sourceRef="_056" targetRef="_057">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("HOLD_AT_STAGE_2_PARAM_ACTIVE")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="_058" name="Hold and Alert MRV_058" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Place the transaction on hold and raise an alert detailing the reasons.</documentation>
+    <serviceTask id="_058" name="node description and id: SOME_PREFIX_058" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>Hold</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
-    <sequenceFlow id="flow161" name="True" sourceRef="_056" targetRef="_058">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("HOLD_AT_STAGE_2_PARAM_ACTIVE")}]]></conditionExpression>
-    </sequenceFlow>
-    <serviceTask id="_013" name="Hold and Alert MRV_013" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Place the transaction on hold and raise an alert detailing the reasons.</documentation>
+    <serviceTask id="_012" name="node description and id: SOME_PREFIX Configured to hold at this point? MRV_012" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
-        </activiti:field>
-        <activiti:field name="taskBean">
-          <activiti:string>Hold</activiti:string>
-        </activiti:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="_012" name="Is MRV Configured to hold at this point? MRV_012" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Check for value of system parameter HOLD_ON_IS_READ_TO_BE_REPLACED_EXISTS
-
-If set to TRUE move to hold ann raise an appropriate alert
-
-If set to FALSE move to suppress outbound industry flow and raise an appropriate alert.</documentation>
-      <extensionElements>
-        <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>doesReadToBeReplacedExistIsMrvConfiguredToHold</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow162" name="False" sourceRef="_012" targetRef="_014">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("HOLD_AT_CHECK_READ_TO_BE_REPLACED_EXISTS")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow163" name="True" sourceRef="_012" targetRef="_013">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("HOLD_AT_CHECK_READ_TO_BE_REPLACED_EXISTS")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="_016" name="Is MRV Configured to hold at this point? MRV_016" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
-      <documentation>Check for value of system parameter HOLD_ON_IS_REPLACEMENT_READ_LESS_THAN_SUBSEQUENT
-
-If set to TRUE move to hold ann raise an appropriate alert
-
-If set to FALSE move to suppress outbound industry flow and raise an appropriate alert.</documentation>
+    <serviceTask id="_016" name="node description and id: SOME_PREFIX Configured to hold at this point? MRV_016" activiti:delegateExpression="${BPMNUtilisoftDecisionServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftDecisionServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="decisionTaskBean">
-          <activiti:string>isReplacementLessThanSubsequentIsMrvConfiguredToHold</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow164" name="False" sourceRef="_016" targetRef="_018">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!BPMN_TOKEN.getNonPersistentVar("HOLD_AT_CHECK_REPLACEMENT_READ_LESS_THAN_SUBSEQUENT")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{!true}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="_017" name="Hold and Alert MRV_017" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
-      <documentation>Place the transaction on hold and raise an alert detailing the reasons.</documentation>
+    <serviceTask id="_017" name="node description and id: SOME_PREFIX_017" activiti:delegateExpression="${BPMNUtilisoftServiceTaskDelegation}" activiti:extensionId="uk.co.utilisoft.activiti_ext.UtilisoftServiceTask">
+      <documentation></documentation>
       <extensionElements>
         <activiti:field name="expressionType">
-          <activiti:string>BEAN_NAME</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
         <activiti:field name="taskBean">
-          <activiti:string>Hold</activiti:string>
+          <activiti:string></activiti:string>
         </activiti:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="flow165" name="True" sourceRef="_016" targetRef="_017">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{BPMN_TOKEN.getNonPersistentVar("HOLD_AT_CHECK_REPLACEMENT_READ_LESS_THAN_SUBSEQUENT")}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{true}]]></conditionExpression>
     </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_MRV">
