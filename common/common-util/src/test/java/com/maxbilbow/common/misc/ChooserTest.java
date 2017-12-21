@@ -11,15 +11,15 @@ import java.util.function.Supplier;
 
 public class ChooserTest
 {
-  
-  final Character[] values = {'A','B','C','D'};
+  private static final Character[] values = {'A','B','C','D'};
   private Map<Character,Integer> hitMap;
+  
   @Before
   public void setUp() throws Exception
   {
     hitMap = new HashMap<>();
-    for (int i = 0;i<values.length;++i)
-      hitMap.put(values[i],0);
+    for (final Character value : values)
+      hitMap.put(value, 0);
   }
   
   @After
@@ -28,6 +28,12 @@ public class ChooserTest
     Assert.assertEquals(values.length,hitMap.size());
     for (final Character value : values)
       Assert.assertTrue(hitMap.get(value) > 0);
+  }
+  
+  private void updateHits(final Supplier<Character> choice)
+  {
+    for (int i = 0; i<100;++i)
+      hitMap.compute(choice.get(), (c,value) -> ObjectUtils.defaultIfNull(value,0) + 1);
   }
   
   @Test
@@ -39,16 +45,12 @@ public class ChooserTest
     updateHits(() -> Chooser.choose(first,others));
   }
   
-  private void updateHits(final Supplier<Character> choice)
-  {
-    for (int i = 0; i<100;++i)
-    hitMap.compute(choice.get(), (c,value) -> ObjectUtils.defaultIfNull(value,0) + 1);
-  }
+  
   
   @Test
   public void chooseCollection()
   {
-    final Collection<Character> collection = hitMap.keySet();
+    final Set<Character> collection = hitMap.keySet();
     updateHits(() -> Chooser.choose(collection));
   }
   
