@@ -17,7 +17,7 @@ public class RandomUtilTest
     for (int i = 0; i < 1000; ++i)
     {
       final byte result = RandomUtil.between(min, max);
-      System.out.println(result);
+//      System.out.println(result);
       final int idx = result - min;
       if (idx < hits.length)
         hits[idx] = true;
@@ -35,7 +35,7 @@ public class RandomUtilTest
     for (int i = 0; i < 1000; ++i)
     {
       final short result = RandomUtil.between(min, max);
-      System.out.println(result);
+//      System.out.println(result);
       final int idx = result - min;
       if (idx < hits.length)
         hits[idx] = true;
