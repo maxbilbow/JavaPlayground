@@ -12,21 +12,37 @@ public class RandomUtilTest
   @Test
   public void betweenByte()
   {
+    final byte min = -5, max = 1;
+    boolean[] hits = new boolean[max - min];
+    for (int i = 0; i < 1000; ++i)
     {
-      final byte min = -5, max = 1;
-      boolean[] hits = new boolean[max-min];
-      for (int i = 0; i < 1000; ++i)
-      {
-        final byte result = RandomUtil.between(min,max);
-       System.out.println(result);
-        final int idx = result-min;
-        if (idx<hits.length)
-          hits[idx] = true;
-        Assert.assertTrue("Between "+min+" and "+max+": " + result, result >= min && result <= max);
-      }
-      for (int i=min;i<max;++i)
-        Assert.assertTrue((i) + "hit", hits[i-min]);
+      final byte result = RandomUtil.between(min, max);
+      System.out.println(result);
+      final int idx = result - min;
+      if (idx < hits.length)
+        hits[idx] = true;
+      Assert.assertTrue("Between " + min + " and " + max + ": " + result, result >= min && result <= max);
     }
+    for (int i = min; i < max; ++i)
+      Assert.assertTrue((i) + "hit", hits[i - min]);
+  }
+  
+  @Test
+  public void betweenShort()
+  {
+    final short min = -5, max = 1;
+    boolean[] hits = new boolean[max - min];
+    for (int i = 0; i < 1000; ++i)
+    {
+      final short result = RandomUtil.between(min, max);
+      System.out.println(result);
+      final int idx = result - min;
+      if (idx < hits.length)
+        hits[idx] = true;
+      Assert.assertTrue("Between " + min + " and " + max + ": " + result, result >= min && result <= max);
+    }
+    for (int i = min; i < max; ++i)
+      Assert.assertTrue((i) + "hit", hits[i - min]);
   }
   
   @Test
@@ -50,10 +66,15 @@ public class RandomUtilTest
       throw new AssertionError("Range was too large! " + range);
     System.out.println("Assessing random values on range of " + range);
     boolean[] hits = new boolean[(int) range];
-    for (int i = 0; i < hits.length*100; ++i)
+    final int maxIterations = hits.length*100;
+    final int halfWay = maxIterations / 2;
+    for (int i = 0; i < maxIterations; ++i)
     {
-      final int result = RandomUtil.between(min,max);
-//      System.out.println(result);
+      final int result;
+      if (i < halfWay)
+        result = RandomUtil.between(min,max);
+      else
+        result = RandomUtil.between(max,min); // test switching
       final int idx = result-min;
       if (idx<hits.length)
         hits[idx] = true;
@@ -117,6 +138,25 @@ public class RandomUtilTest
       Assert.assertTrue("2 hit", twoHit);
     }
   }
+  
+  @Test
+  public void betweenFloat()
+  {
+    final float min = -5, max = 1;
+    boolean[] hits = new boolean[(int) (max - min)];
+    for (int i = 0; i < 1000; ++i)
+    {
+      final float result = RandomUtil.between(min, max);
+//      System.out.println(result);
+      final float idx = result - min;
+      if (idx < hits.length)
+        hits[(int) idx] = true;
+      Assert.assertTrue("Between " + min + " and " + max + ": " + result, result >= min && result <= max);
+    }
+    for (int i = (int) min; i < max; ++i)
+      Assert.assertTrue((i) + "hit", hits[(int) (i - min)]);
+  }
+  
   
   @Test
   public void betweenDouble()

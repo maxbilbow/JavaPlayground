@@ -1,6 +1,6 @@
 package com.maxbilbow.pg1;
 
-import com.maxbilbow.common.util.ProjectUtils;
+import com.maxbilbow.test.util.ProjectUtils;
 import org.junit.Assert;
 import org.junit.Test;
 

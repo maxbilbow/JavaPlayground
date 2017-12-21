@@ -17,6 +17,7 @@
     <modules>
         <module>common-util</module>
         <module>common-ui</module>
+        <module>common-test</module>
     </modules>
 
     <reporting>

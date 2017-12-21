@@ -1,4 +1,4 @@
-package com.maxbilbow.common.util;
+package com.maxbilbow.test.util;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
